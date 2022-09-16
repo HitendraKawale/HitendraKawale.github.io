@@ -8,7 +8,7 @@ import PortfolioPreview from '../components/PortfolioPreview.astro';
 // Data Fetching: List all Markdown posts in the repo.
 const projects = await Astro.glob('./project/**/*.md');
 const featuredProject = projects[0];
-
+ 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 ---
@@ -17,7 +17,7 @@ const featuredProject = projects[0];
 	<head>
 		<MainHead
 			title="Hitendra Kawale: Personal Site"
-			description="Hitendra Kawale: Developer, Speaker, and Writer..."
+			description="Hitendra Kawale: Developer, Polyglot and Gamer..."
 		/>
 		<style>
 			.wrapper {
@@ -217,9 +217,9 @@ const featuredProject = projects[0];
 					<small class="subtitle">The personal site of</small>Hitendra Kawale
 				</h1>
 				<div class="roles">
-					<span class="role">👩‍💻 Developer <span class="invert">👩‍💻 Developer</span></span>
-					<span class="role">🎤 Speaker <span class="invert">🎤 Speaker</span></span>
-					<span class="role">✏️ Writer <span class="invert">✏️ Writer</span></span>
+					<span class="role">🧑‍💻 Developer <span class="invert">🧑‍💻 Developer</span></span>
+					<span class="role">📚 Polyglot <span class="invert">📚 Polyglot</span></span>
+					<span class="role">🎮 Gamer <span class="invert">🎮 Gamer</span></span>
 				</div>
 				<p class="desc">Lover of dogs, roadtrips, and poetry.</p>
 			</div>
@@ -238,7 +238,7 @@ const featuredProject = projects[0];
 					<p class="bio">
 						<span>Hello!</span> 
 						<a href="https://github.com/withastro/astro" target="_blank" rel="nofollow"> Astro</a>,
-						a new way to build static sites. This is just an example template for you to modify.
+						
 					</p>
 					<p>
 						<a href="/about">Read more</a>
