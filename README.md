@@ -1,4 +1,4 @@
-# Astro Starter Kit: Portfolio
+# Astro Starter Kit: Portfolio By Hitendra Kawale
 
 ```
 npm init astro -- --template portfolio
