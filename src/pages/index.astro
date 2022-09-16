@@ -5,6 +5,9 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import PortfolioPreview from '../components/PortfolioPreview.astro';
 
+// import imagename from "../folderlocation/picturename.png";
+// <img src={imagename} alt="hello"/>
+
 // Data Fetching: List all Markdown posts in the repo.
 const projects = await Astro.glob('./project/**/*.md');
 const featuredProject = projects[0];
