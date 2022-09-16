@@ -1,6 +1,5 @@
 {
   "name": "@example/portfolio",
-  "homepage": "https://hitendrakawale.github.io",
   "type": "module",
   "version": "0.0.1",
   "private": true,
@@ -10,8 +9,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro", 
-    "predeploy":"npm run build ", 
-    "deploy" : "ghpages -D dist"
+    "predeploy":"npm run build "
+
   },
   "dependencies": {
     "astro": "^1.2.5"
