@@ -47,7 +47,7 @@ const featuredProject = projects[0];
 
 			.gradient,
 			.gradient2 {
-				/* background-image: url('/assets/mesh-gradient.jpg'); */
+				/* background-image: url('/assets/lol.jpeg'); */
 				background-size: cover;
 				pointer-events: none;
 				mix-blend-mode: screen;
@@ -89,11 +89,16 @@ const featuredProject = projects[0];
 				font-size: var(--f-u6);
 				margin-bottom: 0.5rem;
 				margin-top: 0;
+				background: url("../assets/lol.jpeg");
+				background-clip: text;
+				-webkit-background-clip: text;
+				color: transparent;
 			}
 
 			@media (min-width: 750px) {
 				.title {
 					font-size: var(--f-u12);
+
 				}
 			}
 
@@ -174,6 +179,10 @@ const featuredProject = projects[0];
 				font-size: var(--f-u1);
 				margin-top: 1.5rem;
 				margin-bottom: 0;
+				background: url("../assets/lol.jpeg");
+				background-clip: text;
+				-webkit-background-clip: text;
+				color: transparent;
 			}
 
 			.subtitle {
