@@ -1,0 +1,49 @@
+<header class="site-header">
+  <a href="/" class="brand">Hitendra Kawale</a>
+
+  <nav aria-label="Main navigation">
+    <a href="#projects">Projects</a>
+    <a href="#focus">Focus</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    width: min(var(--max-width), calc(100% - 32px));
+    margin: 0 auto;
+    padding: 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .brand {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  nav {
+    display: flex;
+    gap: 20px;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  nav a:hover {
+    color: var(--text);
+  }
+
+  @media (max-width: 640px) {
+    .site-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    nav {
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+  }
+</style>
