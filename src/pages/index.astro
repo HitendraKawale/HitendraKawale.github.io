@@ -1,5 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import Section from "../components/Section.astro";
+import { projects } from "../data/projects";
 ---
 
 <BaseLayout
@@ -25,40 +28,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
   </section>
 
-  <section id="projects" class="section">
-    <div class="section-heading">
-      <p class="eyebrow">Selected Work</p>
-      <h2>Projects built around real AI engineering problems.</h2>
-    </div>
-
+  <Section
+    id="projects"
+    eyebrow="Selected Work"
+    title="Projects built around real AI engineering problems."
+  >
     <div class="project-list">
-      <article>
-        <h3>Mini OpenAI Platform</h3>
-        <p>
-          OpenAI-style local AI platform with FastAPI microservices, embeddings,
-          RAG, Docker Compose, Prometheus, and Grafana.
-        </p>
-      </article>
-
-      <article>
-        <h3>LLM Evaluation Platform</h3>
-        <p>
-          Backend platform for testing model configurations, prompt templates,
-          datasets, evaluation runs, and persisted comparison results.
-        </p>
-      </article>
-
-      <article>
-        <h3>3DGS Scribble Segmentation</h3>
-        <p>
-          Research-style computer vision project extending a 3D Gaussian
-          Splatting segmentation pipeline with scribble-guided refinement.
-        </p>
-      </article>
+      {projects.map((project) => <ProjectCard project={project} />)}
     </div>
-  </section>
+  </Section>
 
-  <section id="focus" class="section focus">
+  <section id="focus" class="focus-section">
     <div>
       <p class="eyebrow">Technical Focus</p>
       <h2>Where I am strongest.</h2>
@@ -73,7 +53,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </ul>
   </section>
 
-  <section id="contact" class="section contact">
+  <section id="contact" class="contact-section">
     <p class="eyebrow">Contact</p>
     <h2>Open to AI engineering and applied ML roles.</h2>
     <p>
@@ -124,7 +104,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .hero-links a,
-  .contact a {
+  .contact-section a {
     display: inline-flex;
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -133,25 +113,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   .hero-links a:hover,
-  .contact a:hover {
+  .contact-section a:hover {
     border-color: var(--text);
-  }
-
-  .section {
-    padding: 72px 0;
-    border-top: 1px solid var(--border);
-  }
-
-  .section-heading {
-    max-width: 720px;
-    margin-bottom: 32px;
-  }
-
-  h2 {
-    margin: 0;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    line-height: 1;
-    letter-spacing: -0.06em;
   }
 
   .project-list {
@@ -159,29 +122,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     gap: 18px;
   }
 
-  article {
-    padding: 28px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: rgba(255, 255, 255, 0.55);
+  .focus-section,
+  .contact-section {
+    padding: 72px 0;
+    border-top: 1px solid var(--border);
   }
 
-  article h3 {
-    margin: 0 0 10px;
-    font-size: 1.35rem;
-    letter-spacing: -0.03em;
-  }
-
-  article p {
-    max-width: 760px;
-    margin: 0;
-    color: var(--muted);
-  }
-
-  .focus {
+  .focus-section {
     display: grid;
     grid-template-columns: 0.85fr 1.15fr;
     gap: 48px;
+  }
+
+  .focus-section h2,
+  .contact-section h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.06em;
   }
 
   ul {
@@ -191,7 +149,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     line-height: 1.9;
   }
 
-  .contact p {
+  .contact-section p {
     max-width: 640px;
     color: var(--muted);
   }
@@ -201,9 +159,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       padding: 64px 0;
     }
 
-    .focus {
+    .focus-section {
       grid-template-columns: 1fr;
       gap: 24px;
+      padding: 56px 0;
+    }
+
+    .contact-section {
+      padding: 56px 0;
     }
   }
 </style>

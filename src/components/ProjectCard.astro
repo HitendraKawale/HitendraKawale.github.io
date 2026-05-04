@@ -1,0 +1,132 @@
+---
+import type { Project } from "../data/projects";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<article class="project-card">
+  <div class="project-topline">
+    <p>{project.status}</p>
+    <span>{project.subtitle}</span>
+  </div>
+
+  <div class="project-body">
+    <h3>{project.title}</h3>
+    <p>{project.description}</p>
+  </div>
+
+  <div class="project-stack" aria-label={`${project.title} technology stack`}>
+    {project.stack.map((item) => <span>{item}</span>)}
+  </div>
+
+  {
+    project.href && (
+      <a href={project.href} target="_blank" rel="noreferrer" class="project-link">
+        View project
+      </a>
+    )
+  }
+</article>
+
+<style>
+  .project-card {
+    position: relative;
+    display: grid;
+    gap: 24px;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.55);
+    transition:
+      border-color 180ms ease,
+      transform 180ms ease,
+      background 180ms ease;
+  }
+
+  .project-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(24, 23, 22, 0.35);
+    background: rgba(255, 255, 255, 0.78);
+  }
+
+  .project-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .project-topline p {
+    margin: 0;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .project-topline span {
+    text-align: right;
+  }
+
+  .project-body h3 {
+    margin: 0 0 10px;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .project-body p {
+    max-width: 760px;
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .project-stack span {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 10px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    background: rgba(247, 244, 239, 0.75);
+  }
+
+  .project-link {
+    width: fit-content;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 650;
+  }
+
+  .project-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .project-card {
+      padding: 22px;
+    }
+
+    .project-topline {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .project-topline span {
+      text-align: left;
+    }
+  }
+</style>
