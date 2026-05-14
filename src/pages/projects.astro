@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { projects } from "../data/projects";
+import { profile } from "../data/profile";
+
+const built      = projects.filter(p => p.status === "Built");
+const inProgress = projects.filter(p => p.status === "In Progress");
+const research   = projects.filter(p => p.status === "Research");
+---
+
+<BaseLayout
+  title={`Projects — ${profile.name}`}
+  description="All projects by Hitendra Kawale — AI systems, RAG pipelines, LLM evaluation platforms, and computer vision research."
+>
+  <section class="page-header">
+    <h1>Projects</h1>
+    <p>Things I've designed, built, and shipped — or am actively building.</p>
+  </section>
+
+  {built.length > 0 && (
+    <section class="group">
+      <h2 class="group-label">Built</h2>
+      <div class="card-grid">
+        {built.map(project => <ProjectCard project={project} />)}
+      </div>
+    </section>
+  )}
+
+  {inProgress.length > 0 && (
+    <section class="group">
+      <h2 class="group-label">In Progress</h2>
+      <div class="card-grid">
+        {inProgress.map(project => <ProjectCard project={project} />)}
+      </div>
+    </section>
+  )}
+
+  {research.length > 0 && (
+    <section class="group">
+      <h2 class="group-label">Research</h2>
+      <div class="card-grid">
+        {research.map(project => <ProjectCard project={project} />)}
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 64px 0 48px;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin-bottom: 10px;
+  }
+
+  .page-header p {
+    color: var(--muted);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .group {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .group-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .card-grid {
+    display: grid;
+    gap: 12px;
+  }
+</style>

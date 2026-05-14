@@ -1,0 +1,103 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+
+const formatted = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+}).format(new Date(post.data.date));
+---
+
+<a class="blog-card" href={`/blog/${post.id}`}>
+  <div class="blog-meta">
+    <time>{formatted}</time>
+    {post.data.tags && post.data.tags.length > 0 && (
+      <div class="tags">
+        {post.data.tags.slice(0, 2).map(tag => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <h3>{post.data.title}</h3>
+  <p>{post.data.description}</p>
+
+  <span class="read-more">Read →</span>
+</a>
+
+<style>
+  .blog-card {
+    display: grid;
+    gap: 10px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg);
+    transition: border-color 150ms, transform 150ms;
+    cursor: pointer;
+  }
+
+  .blog-card:hover {
+    border-color: #c0c0c0;
+    transform: translateY(-1px);
+  }
+
+  .blog-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  time {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .tags {
+    display: flex;
+    gap: 5px;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    color: var(--muted);
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text);
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .read-more {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 4px;
+    transition: opacity 150ms;
+  }
+
+  .blog-card:hover .read-more {
+    opacity: 0.6;
+  }
+</style>

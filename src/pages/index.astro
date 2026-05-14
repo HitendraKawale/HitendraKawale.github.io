@@ -1,172 +1,295 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
-import Section from "../components/Section.astro";
+import BlogCard from "../components/BlogCard.astro";
 import { projects } from "../data/projects";
+import { profile } from "../data/profile";
+import { getCollection } from "astro:content";
+
+const recentPosts = (await getCollection("blog", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 2);
+
+const featured = projects.filter(p => p.featured);
 ---
 
 <BaseLayout
-  title="Hitendra Kawale — AI Engineer"
-  description="AI engineer building production-style ML systems, RAG platforms, LLM evaluation tooling, and applied computer vision projects."
+  title={`${profile.name} — ${profile.title}`}
+  description={profile.bio}
 >
+
+  <!-- Hero -->
   <section class="hero">
-    <p class="eyebrow">AI Engineer · Backend Systems · Applied ML</p>
+    <div class="status-badge">
+      <span class="dot"></span>
+      {profile.availability}
+    </div>
 
-    <h1>I build AI systems that connect models, data, APIs, and real product workflows.</h1>
-
-    <p class="intro">
-      I work across RAG, LLM evaluation, backend infrastructure, computer vision,
-      and production-style machine learning systems.
-    </p>
+    <h1>{profile.name}</h1>
+    <p class="role">{profile.title}</p>
+    <p class="bio">{profile.bio}</p>
 
     <div class="hero-links">
-      <a href="#projects">View projects</a>
-      <a href="https://github.com/HitendraKawale" target="_blank" rel="noreferrer">
-        GitHub
+      <a href={profile.github} target="_blank" rel="noreferrer" class="btn-primary">
+        GitHub ↗
       </a>
-      <a href="#contact">Contact</a>
+      {profile.linkedin && (
+        <a href={profile.linkedin} target="_blank" rel="noreferrer" class="btn-ghost">
+          LinkedIn ↗
+        </a>
+      )}
+      <a href={`mailto:${profile.email}`} class="btn-ghost">
+        Email
+      </a>
     </div>
   </section>
 
-  <Section
-    id="projects"
-    eyebrow="Selected Work"
-    title="Projects built around real AI engineering problems."
-  >
-    <div class="project-list">
-      {projects.map((project) => <ProjectCard project={project} />)}
+  <!-- Skills -->
+  <section class="section">
+    <h2 class="section-label">Skills</h2>
+    <div class="tags">
+      {profile.skills.map(skill => <span class="tag">{skill}</span>)}
     </div>
-  </Section>
-
-  <section id="focus" class="focus-section">
-    <div>
-      <p class="eyebrow">Technical Focus</p>
-      <h2>Where I am strongest.</h2>
-    </div>
-
-    <ul>
-      <li>FastAPI backend systems for AI products</li>
-      <li>RAG pipelines, vector search, embeddings, and retrieval workflows</li>
-      <li>LLM evaluation, prompt testing, and model comparison tooling</li>
-      <li>Applied computer vision and 3D Gaussian Splatting research</li>
-      <li>Docker, observability, CI checks, and deployment-minded engineering</li>
-    </ul>
   </section>
 
-  <section id="contact" class="contact-section">
-    <p class="eyebrow">Contact</p>
-    <h2>Open to AI engineering and applied ML roles.</h2>
-    <p>
-      The best place to start is my GitHub. Resume and project case studies will
-      be added as this site evolves.
-    </p>
-
-    <a href="https://github.com/HitendraKawale" target="_blank" rel="noreferrer">
-      github.com/HitendraKawale
-    </a>
+  <!-- Languages -->
+  <section class="section">
+    <h2 class="section-label">Languages</h2>
+    <p class="lang-intro">Fluent across human languages as much as programming ones.</p>
+    <div class="langs">
+      {profile.languages.map(lang => (
+        <div class="lang-row">
+          <span class="lang-name">{lang.name}</span>
+          <span class="lang-level">{lang.level}</span>
+        </div>
+      ))}
+    </div>
   </section>
+
+  <!-- Featured Projects -->
+  {featured.length > 0 && (
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-label">Selected Projects</h2>
+        <a href="/projects" class="see-all">All projects →</a>
+      </div>
+      <div class="card-grid">
+        {featured.map(project => <ProjectCard project={project} />)}
+      </div>
+    </section>
+  )}
+
+  <!-- Blog -->
+  {recentPosts.length > 0 && (
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-label">Recent Writing</h2>
+        <a href="/blog" class="see-all">All posts →</a>
+      </div>
+      <div class="card-grid">
+        {recentPosts.map(post => <BlogCard post={post} />)}
+      </div>
+    </section>
+  )}
+
 </BaseLayout>
 
 <style>
+  /* Hero */
   .hero {
-    padding: 96px 0 88px;
+    padding: 80px 0 64px;
   }
 
-  .eyebrow {
-    margin: 0 0 18px;
-    color: var(--accent);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 32px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    background: var(--surface);
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.35; }
   }
 
   h1 {
-    max-width: 860px;
-    margin: 0;
-    font-size: clamp(3rem, 8vw, 6.5rem);
-    line-height: 0.95;
-    letter-spacing: -0.08em;
+    font-size: clamp(2.8rem, 8vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    margin-bottom: 6px;
   }
 
-  .intro {
-    max-width: 660px;
-    margin: 28px 0 0;
+  .role {
+    font-size: 1.1rem;
     color: var(--muted);
-    font-size: 1.2rem;
+    margin-bottom: 20px;
+    line-height: 1;
+  }
+
+  .bio {
+    max-width: 560px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 32px;
   }
 
   .hero-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
-    margin-top: 34px;
+    gap: 10px;
   }
 
-  .hero-links a,
-  .contact-section a {
+  .btn-primary,
+  .btn-ghost {
     display: inline-flex;
+    align-items: center;
+    padding: 9px 18px;
+    border-radius: 99px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: opacity 150ms;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  .btn-ghost {
     border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 10px 16px;
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--bg);
+    color: var(--text);
   }
 
-  .hero-links a:hover,
-  .contact-section a:hover {
-    border-color: var(--text);
+  .btn-primary:hover,
+  .btn-ghost:hover {
+    opacity: 0.75;
   }
 
-  .project-list {
-    display: grid;
-    gap: 18px;
-  }
-
-  .focus-section,
-  .contact-section {
-    padding: 72px 0;
+  /* Sections */
+  .section {
+    padding: 56px 0;
     border-top: 1px solid var(--border);
   }
 
-  .focus-section {
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 48px;
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
   }
 
-  .focus-section h2,
-  .contact-section h2 {
-    margin: 0;
-    font-size: clamp(2rem, 4vw, 3.5rem);
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .section-header .section-label {
+    margin-bottom: 0;
+  }
+
+  .see-all {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--muted);
+    transition: color 150ms;
+  }
+
+  .see-all:hover {
+    color: var(--text);
+  }
+
+  /* Skills */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-size: 0.82rem;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color 150ms;
+  }
+
+  .tag:hover {
+    border-color: #aaa;
+  }
+
+  /* Languages */
+  .lang-intro {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 16px;
     line-height: 1;
-    letter-spacing: -0.06em;
   }
 
-  ul {
-    margin: 0;
-    padding-left: 20px;
+  .langs {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 300px;
+  }
+
+  .lang-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .lang-row:last-child {
+    border-bottom: none;
+  }
+
+  .lang-name {
+    font-weight: 600;
+  }
+
+  .lang-level {
     color: var(--muted);
-    line-height: 1.9;
+    font-size: 0.82rem;
   }
 
-  .contact-section p {
-    max-width: 640px;
-    color: var(--muted);
+  /* Cards */
+  .card-grid {
+    display: grid;
+    gap: 12px;
   }
 
-  @media (max-width: 760px) {
+  @media (max-width: 560px) {
     .hero {
-      padding: 64px 0;
+      padding: 56px 0 48px;
     }
-
-    .focus-section {
-      grid-template-columns: 1fr;
-      gap: 24px;
-      padding: 56px 0;
-    }
-
-    .contact-section {
-      padding: 56px 0;
+    .section {
+      padding: 40px 0;
     }
   }
 </style>

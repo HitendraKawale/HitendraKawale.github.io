@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { getCollection } from "astro:content";
+import { profile } from "../../data/profile";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout
+  title={`Blog — ${profile.name}`}
+  description="Writing on AI engineering, RAG systems, LLM evaluation, and applied machine learning."
+>
+  <section class="page-header">
+    <h1>Writing</h1>
+    <p>Notes on AI engineering, systems thinking, and whatever I'm building.</p>
+  </section>
+
+  {posts.length === 0 ? (
+    <p class="empty">No posts yet. Check back soon.</p>
+  ) : (
+    <div class="post-list">
+      {posts.map(post => <BlogCard post={post} />)}
+    </div>
+  )}
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 64px 0 48px;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin-bottom: 10px;
+  }
+
+  .page-header p {
+    color: var(--muted);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .post-list {
+    display: grid;
+    gap: 12px;
+    padding-bottom: 80px;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+
+  .empty {
+    color: var(--muted);
+    font-size: 0.95rem;
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+  }
+</style>

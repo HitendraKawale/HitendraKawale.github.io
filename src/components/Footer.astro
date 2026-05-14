@@ -1,18 +1,53 @@
-<footer class="site-footer">
-  <p>Built with Astro. Designed to stay simple.</p>
+---
+import { profile } from "../data/profile";
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <span class="copy">© {year} {profile.name}</span>
+    <div class="footer-links">
+      <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
+      {profile.linkedin && (
+        <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+      )}
+      <a href={`mailto:${profile.email}`}>Email</a>
+    </div>
+  </div>
 </footer>
 
 <style>
-  .site-footer {
-    width: min(var(--max-width), calc(100% - 32px));
-    margin: 72px auto 0;
-    padding: 32px 0;
+  .footer {
+    margin-top: auto;
     border-top: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 0.95rem;
   }
 
-  p {
-    margin: 0;
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 0;
+    flex-wrap: wrap;
+  }
+
+  .copy {
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+    font-size: 0.875rem;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    transition: color 150ms;
+  }
+
+  .footer-links a:hover {
+    color: var(--text);
   }
 </style>

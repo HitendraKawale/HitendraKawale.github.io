@@ -1,30 +1,33 @@
 :root {
-  --bg: #f7f4ef;
-  --surface: #ffffff;
-  --text: #181716;
-  --muted: #6f6a63;
-  --border: #ded8cf;
-  --accent: #2f5d50;
-
-  --max-width: 1040px;
-  --radius: 18px;
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #888888;
+  --border: #e8e8e8;
+  --surface: #f7f7f7;
+  --green: #16a34a;
+  --max-width: 740px;
+  --nav-height: 64px;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   background: var(--bg);
   color: var(--text);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 a {
@@ -32,16 +35,27 @@ a {
   text-decoration: none;
 }
 
-main {
-  width: min(var(--max-width), calc(100% - 32px));
-  margin: 0 auto;
+p {
+  line-height: 1.75;
 }
 
-p {
-  line-height: 1.7;
+img {
+  display: block;
+  max-width: 100%;
 }
 
 ::selection {
   background: var(--text);
   color: var(--bg);
+}
+
+/* Scrollbar — minimal */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/* Utility */
+.container {
+  width: min(var(--max-width), calc(100% - 40px));
+  margin-inline: auto;
 }

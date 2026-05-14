@@ -1,0 +1,84 @@
+---
+import { profile } from "../data/profile";
+const { pathname } = Astro.url;
+---
+
+<header class="nav-wrap">
+  <nav class="nav container">
+    <a href="/" class="brand">{profile.initials}</a>
+
+    <div class="nav-links">
+      <a href="/projects" class:list={["nav-link", { active: pathname.startsWith("/projects") }]}>
+        Projects
+      </a>
+      <a href="/blog" class:list={["nav-link", { active: pathname.startsWith("/blog") }]}>
+        Blog
+      </a>
+      <a href={`mailto:${profile.email}`} class="nav-cta">
+        Say hi
+      </a>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-height);
+    gap: 24px;
+  }
+
+  .brand {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .nav-link {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--muted);
+    transition: color 150ms, background 150ms;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--text);
+    background: var(--surface);
+  }
+
+  .nav-cta {
+    margin-left: 8px;
+    padding: 7px 16px;
+    border-radius: 99px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: var(--text);
+    color: var(--bg);
+    transition: opacity 150ms;
+  }
+
+  .nav-cta:hover {
+    opacity: 0.8;
+  }
+</style>

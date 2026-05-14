@@ -1,0 +1,173 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  frontmatter: {
+    title: string;
+    description: string;
+    date: Date;
+    tags?: string[];
+  };
+}
+
+const { frontmatter } = Astro.props;
+
+const formatted = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}).format(new Date(frontmatter.date));
+---
+
+<BaseLayout title={`${frontmatter.title} — Hitendra Kawale`} description={frontmatter.description}>
+  <article class="post">
+    <header class="post-header">
+      <a href="/blog" class="back">← All posts</a>
+      <h1>{frontmatter.title}</h1>
+      <div class="post-meta">
+        <time>{formatted}</time>
+        {frontmatter.tags && frontmatter.tags.length > 0 && (
+          <div class="post-tags">
+            {frontmatter.tags.map(tag => <span class="tag">{tag}</span>)}
+          </div>
+        )}
+      </div>
+    </header>
+
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    padding: 56px 0 96px;
+  }
+
+  .back {
+    display: inline-block;
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 32px;
+    transition: color 150ms;
+  }
+
+  .back:hover {
+    color: var(--text);
+  }
+
+  .post-header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 0.875rem;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 0.78rem;
+    padding: 3px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    color: var(--muted);
+  }
+
+  /* Prose styles */
+  .prose {
+    line-height: 1.8;
+    font-size: 1.05rem;
+    color: var(--text);
+  }
+
+  .prose :global(h2) {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin: 40px 0 12px;
+  }
+
+  .prose :global(h3) {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 28px 0 8px;
+  }
+
+  .prose :global(p) {
+    margin-bottom: 20px;
+    color: #222222;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 20px;
+    margin-bottom: 20px;
+  }
+
+  .prose :global(li) {
+    margin-bottom: 6px;
+    line-height: 1.75;
+  }
+
+  .prose :global(code) {
+    font-family: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 0.88em;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .prose :global(pre) {
+    background: #f5f5f5;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-x: auto;
+    margin-bottom: 24px;
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.9rem;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 3px solid var(--border);
+    padding-left: 18px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .prose :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+</style>
