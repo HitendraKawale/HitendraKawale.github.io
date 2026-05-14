@@ -5,17 +5,17 @@ const { pathname } = Astro.url;
 
 <header class="nav-wrap">
   <nav class="nav container">
-    <a href="/" class="brand">{profile.initials}</a>
+    <a href="/" class="brand">HK</a>
 
     <div class="nav-links">
-      <a href="/projects" class:list={["nav-link", { active: pathname.startsWith("/projects") }]}>
+      <a href="/projects" class:list={["nl", { active: pathname.startsWith("/projects") }]}>
         Projects
       </a>
-      <a href="/blog" class:list={["nav-link", { active: pathname.startsWith("/blog") }]}>
+      <a href="/blog" class:list={["nl", { active: pathname.startsWith("/blog") }]}>
         Blog
       </a>
-      <a href={`mailto:${profile.email}`} class="nav-cta">
-        Say hi
+      <a href={`mailto:${profile.email}`} class="nl-cta">
+        Get in touch
       </a>
     </div>
   </nav>
@@ -23,28 +23,33 @@ const { pathname } = Astro.url;
 
 <style>
   .nav-wrap {
+    border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+    background: rgba(11, 11, 11, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
 
   .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--nav-height);
-    gap: 24px;
+    height: var(--nav-h);
   }
 
   .brand {
-    font-size: 1rem;
+    font-family: var(--mono);
+    font-size: 0.875rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.06em;
     color: var(--text);
+    transition: color 150ms;
+  }
+
+  .brand:hover {
+    color: var(--accent);
   }
 
   .nav-links {
@@ -53,32 +58,35 @@ const { pathname } = Astro.url;
     gap: 4px;
   }
 
-  .nav-link {
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    color: var(--muted);
-    transition: color 150ms, background 150ms;
-  }
-
-  .nav-link:hover,
-  .nav-link.active {
-    color: var(--text);
-    background: var(--surface);
-  }
-
-  .nav-cta {
-    margin-left: 8px;
-    padding: 7px 16px;
-    border-radius: 99px;
+  .nl {
     font-size: 0.875rem;
-    font-weight: 600;
-    background: var(--text);
-    color: var(--bg);
-    transition: opacity 150ms;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: color 150ms;
   }
 
-  .nav-cta:hover {
-    opacity: 0.8;
+  .nl:hover, .nl.active {
+    color: var(--text);
+  }
+
+  .nl-cta {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 7px 16px;
+    margin-left: 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    transition: border-color 150ms, color 150ms;
+  }
+
+  .nl-cta:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  @media (max-width: 500px) {
+    .nl-cta { display: none; }
   }
 </style>

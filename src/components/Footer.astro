@@ -6,7 +6,7 @@ const year = new Date().getFullYear();
 <footer class="footer">
   <div class="container footer-inner">
     <span class="copy">© {year} {profile.name}</span>
-    <div class="footer-links">
+    <div class="links">
       <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
       {profile.linkedin && (
         <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
@@ -32,22 +32,23 @@ const year = new Date().getFullYear();
   }
 
   .copy {
+    font-family: var(--mono);
+    font-size: 0.75rem;
     color: var(--muted);
-    font-size: 0.875rem;
   }
 
-  .footer-links {
+  .links {
     display: flex;
     gap: 20px;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
   }
 
-  .footer-links a {
+  .links a {
     color: var(--muted);
     transition: color 150ms;
   }
 
-  .footer-links a:hover {
-    color: var(--text);
+  .links a:hover {
+    color: var(--accent);
   }
 </style>

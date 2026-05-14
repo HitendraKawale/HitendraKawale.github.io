@@ -8,96 +8,81 @@ interface Props {
 const { post } = Astro.props;
 
 const formatted = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "short",
-  day: "numeric",
+  year: "numeric", month: "short", day: "numeric",
 }).format(new Date(post.data.date));
 ---
 
-<a class="blog-card" href={`/blog/${post.id}`}>
-  <div class="blog-meta">
-    <time>{formatted}</time>
-    {post.data.tags && post.data.tags.length > 0 && (
-      <div class="tags">
-        {post.data.tags.slice(0, 2).map(tag => (
-          <span class="tag">{tag}</span>
-        ))}
-      </div>
-    )}
+<a class="post-row" href={`/blog/${post.id}`}>
+  <time>{formatted}</time>
+  <div class="post-info">
+    <h3>{post.data.title}</h3>
+    <p>{post.data.description}</p>
   </div>
-
-  <h3>{post.data.title}</h3>
-  <p>{post.data.description}</p>
-
-  <span class="read-more">Read →</span>
+  <span class="arrow">↗</span>
 </a>
 
 <style>
-  .blog-card {
+  .post-row {
     display: grid;
-    gap: 10px;
-    padding: 24px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: var(--bg);
-    transition: border-color 150ms, transform 150ms;
-    cursor: pointer;
+    grid-template-columns: 110px 1fr 24px;
+    align-items: start;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 150ms;
   }
 
-  .blog-card:hover {
-    border-color: #c0c0c0;
-    transform: translateY(-1px);
+  .post-row:first-child {
+    border-top: 1px solid var(--border);
   }
 
-  .blog-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+  .post-row:hover { color: var(--accent); }
 
   time {
-    font-size: 0.82rem;
-    color: var(--muted);
-  }
-
-  .tags {
-    display: flex;
-    gap: 5px;
-  }
-
-  .tag {
+    font-family: var(--mono);
     font-size: 0.75rem;
-    padding: 2px 8px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 99px;
     color: var(--muted);
+    padding-top: 3px;
+    white-space: nowrap;
+    transition: color 150ms;
   }
+
+  .post-row:hover time { color: var(--muted); }
 
   h3 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    color: var(--text);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    transition: color 150ms;
   }
 
   p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--muted);
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.5;
   }
 
-  .read-more {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-top: 4px;
-    transition: opacity 150ms;
+  .arrow {
+    font-size: 1rem;
+    color: var(--muted);
+    transition: color 150ms, transform 150ms;
+    padding-top: 2px;
   }
 
-  .blog-card:hover .read-more {
-    opacity: 0.6;
+  .post-row:hover .arrow {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 560px) {
+    .post-row {
+      grid-template-columns: 1fr 20px;
+      gap: 12px;
+    }
+    time {
+      grid-column: 1 / -1;
+      margin-bottom: -8px;
+    }
   }
 </style>

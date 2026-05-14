@@ -6,11 +6,12 @@ import { projects } from "../data/projects";
 import { profile } from "../data/profile";
 import { getCollection } from "astro:content";
 
-const recentPosts = (await getCollection("blog", ({ data }) => !data.draft))
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 2);
+  .slice(0, 3);
 
 const featured = projects.filter(p => p.featured);
+const langLine = profile.languages.map(l => l.name).join(" · ");
 ---
 
 <BaseLayout
@@ -18,76 +19,71 @@ const featured = projects.filter(p => p.featured);
   description={profile.bio}
 >
 
-  <!-- Hero -->
+  <!-- ── HERO ────────────────────────────────── -->
   <section class="hero">
-    <div class="status-badge">
-      <span class="dot"></span>
-      {profile.availability}
-    </div>
+    <div class="hero-grid">
 
-    <h1>{profile.name}</h1>
-    <p class="role">{profile.title}</p>
-    <p class="bio">{profile.bio}</p>
+      <div class="hero-left">
+        <h1>
+          {profile.name.split(" ")[0]}<br />
+          {profile.name.split(" ")[1]}
+        </h1>
+      </div>
 
-    <div class="hero-links">
-      <a href={profile.github} target="_blank" rel="noreferrer" class="btn-primary">
-        GitHub ↗
-      </a>
-      {profile.linkedin && (
-        <a href={profile.linkedin} target="_blank" rel="noreferrer" class="btn-ghost">
-          LinkedIn ↗
-        </a>
-      )}
-      <a href={`mailto:${profile.email}`} class="btn-ghost">
-        Email
-      </a>
-    </div>
-  </section>
-
-  <!-- Skills -->
-  <section class="section">
-    <h2 class="section-label">Skills</h2>
-    <div class="tags">
-      {profile.skills.map(skill => <span class="tag">{skill}</span>)}
-    </div>
-  </section>
-
-  <!-- Languages -->
-  <section class="section">
-    <h2 class="section-label">Languages</h2>
-    <p class="lang-intro">Fluent across human languages as much as programming ones.</p>
-    <div class="langs">
-      {profile.languages.map(lang => (
-        <div class="lang-row">
-          <span class="lang-name">{lang.name}</span>
-          <span class="lang-level">{lang.level}</span>
+      <div class="hero-right">
+        <div class="status-line">
+          <span class="dot"></span>
+          <span class="status-text">{profile.availability}</span>
         </div>
-      ))}
+
+        <p class="role-tag">{profile.title}</p>
+        <p class="bio">{profile.bio}</p>
+
+        <div class="lang-row">
+          <span class="lang-label">Speaks</span>
+          <span class="lang-val">{langLine}</span>
+        </div>
+
+        <nav class="hero-links">
+          <a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a href={`mailto:${profile.email}`}>Email</a>
+          {profile.linkedin && (
+            <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
+          )}
+        </nav>
+      </div>
+
     </div>
   </section>
 
-  <!-- Featured Projects -->
+  <!-- ── STACK ────────────────────────────────── -->
+  <section class="strip">
+    <span class="strip-label">Stack</span>
+    <p class="strip-content">{profile.skills.join(" · ")}</p>
+  </section>
+
+  <!-- ── PROJECTS ─────────────────────────────── -->
   {featured.length > 0 && (
     <section class="section">
-      <div class="section-header">
-        <h2 class="section-label">Selected Projects</h2>
-        <a href="/projects" class="see-all">All projects →</a>
+      <div class="section-head">
+        <span class="section-label">Selected work</span>
+        <a href="/projects" class="section-more">All projects ↗</a>
       </div>
-      <div class="card-grid">
-        {featured.map(project => <ProjectCard project={project} />)}
+      <div class="project-grid">
+        {featured.map(p => <ProjectCard project={p} />)}
       </div>
     </section>
   )}
 
-  <!-- Blog -->
-  {recentPosts.length > 0 && (
+  <!-- ── WRITING ───────────────────────────────── -->
+  {posts.length > 0 && (
     <section class="section">
-      <div class="section-header">
-        <h2 class="section-label">Recent Writing</h2>
-        <a href="/blog" class="see-all">All posts →</a>
+      <div class="section-head">
+        <span class="section-label">Writing</span>
+        <a href="/blog" class="section-more">All posts ↗</a>
       </div>
-      <div class="card-grid">
-        {recentPosts.map(post => <BlogCard post={post} />)}
+      <div>
+        {posts.map(post => <BlogCard post={post} />)}
       </div>
     </section>
   )}
@@ -95,22 +91,37 @@ const featured = projects.filter(p => p.featured);
 </BaseLayout>
 
 <style>
-  /* Hero */
+  /* ── Hero ─────────────────────── */
   .hero {
-    padding: 80px 0 64px;
+    padding: 80px 0 72px;
+    border-bottom: 1px solid var(--border);
   }
 
-  .status-badge {
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: clamp(4rem, 9.5vw, 7.5rem);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 0.88;
+    color: var(--text);
+  }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .status-line {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-bottom: 32px;
-    padding: 6px 12px;
-    border: 1px solid var(--border);
-    border-radius: 99px;
-    background: var(--surface);
   }
 
   .dot {
@@ -119,177 +130,155 @@ const featured = projects.filter(p => p.featured);
     border-radius: 50%;
     background: var(--green);
     flex-shrink: 0;
-    animation: pulse 2.4s ease-in-out infinite;
+    animation: blink 2.5s ease-in-out infinite;
   }
 
-  @keyframes pulse {
+  @keyframes blink {
     0%, 100% { opacity: 1; }
-    50%       { opacity: 0.35; }
+    50% { opacity: 0.25; }
   }
 
-  h1 {
-    font-size: clamp(2.8rem, 8vw, 5rem);
-    font-weight: 800;
-    letter-spacing: -0.05em;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .role {
-    font-size: 1.1rem;
-    color: var(--muted);
-    margin-bottom: 20px;
-    line-height: 1;
-  }
-
-  .bio {
-    max-width: 560px;
-    color: var(--muted);
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: 32px;
-  }
-
-  .hero-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .btn-primary,
-  .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    padding: 9px 18px;
-    border-radius: 99px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    transition: opacity 150ms;
-  }
-
-  .btn-primary {
-    background: var(--text);
-    color: var(--bg);
-  }
-
-  .btn-ghost {
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text);
-  }
-
-  .btn-primary:hover,
-  .btn-ghost:hover {
-    opacity: 0.75;
-  }
-
-  /* Sections */
-  .section {
-    padding: 56px 0;
-    border-top: 1px solid var(--border);
-  }
-
-  .section-label {
+  .status-text {
+    font-family: var(--mono);
     font-size: 0.75rem;
-    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 0.04em;
+  }
+
+  .role-tag {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 20px;
   }
 
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-
-  .section-header .section-label {
-    margin-bottom: 0;
-  }
-
-  .see-all {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--muted);
-    transition: color 150ms;
-  }
-
-  .see-all:hover {
-    color: var(--text);
-  }
-
-  /* Skills */
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .tag {
-    font-size: 0.82rem;
-    padding: 5px 12px;
-    border: 1px solid var(--border);
-    border-radius: 99px;
-    color: var(--text);
-    background: var(--surface);
-    transition: border-color 150ms;
-  }
-
-  .tag:hover {
-    border-color: #aaa;
-  }
-
-  /* Languages */
-  .lang-intro {
-    color: var(--muted);
-    font-size: 0.9rem;
-    margin-bottom: 16px;
-    line-height: 1;
-  }
-
-  .langs {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    max-width: 300px;
+  .bio {
+    font-size: 1rem;
+    color: #888;
+    line-height: 1.75;
   }
 
   .lang-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 10px;
     padding: 10px 0;
+    border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
-  .lang-row:last-child {
-    border-bottom: none;
-  }
-
-  .lang-name {
-    font-weight: 600;
-  }
-
-  .lang-level {
+  .lang-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--muted);
-    font-size: 0.82rem;
   }
 
-  /* Cards */
-  .card-grid {
+  .lang-val {
+    color: var(--text);
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .hero-links a {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2px;
+    transition: color 150ms, border-color 150ms;
+  }
+
+  .hero-links a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 680px) {
+    .hero { padding: 56px 0 52px; }
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    h1 { font-size: clamp(3.4rem, 13vw, 5rem); }
+  }
+
+  /* ── Stack strip ──────────────── */
+  .strip {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .strip-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .strip-content {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.9;
+  }
+
+  /* ── Sections ─────────────────── */
+  .section {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .section-more {
+    font-size: 0.8125rem;
+    color: var(--muted);
+    transition: color 150ms;
+  }
+
+  .section-more:hover {
+    color: var(--text);
+  }
+
+  /* ── Projects grid ────────────── */
+  .project-grid {
     display: grid;
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
   }
 
-  @media (max-width: 560px) {
-    .hero {
-      padding: 56px 0 48px;
-    }
-    .section {
-      padding: 40px 0;
-    }
+  @media (max-width: 620px) {
+    .project-grid { grid-template-columns: 1fr; }
+    .section { padding: 40px 0; }
   }
 </style>

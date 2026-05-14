@@ -4,82 +4,92 @@ import ProjectCard from "../components/ProjectCard.astro";
 import { projects } from "../data/projects";
 import { profile } from "../data/profile";
 
-const built      = projects.filter(p => p.status === "Built");
-const inProgress = projects.filter(p => p.status === "In Progress");
-const research   = projects.filter(p => p.status === "Research");
+const groups: { label: string; status: typeof projects[0]["status"] }[] = [
+  { label: "Built",       status: "Built" },
+  { label: "In Progress", status: "In Progress" },
+  { label: "Research",    status: "Research" },
+];
 ---
 
 <BaseLayout
   title={`Projects — ${profile.name}`}
-  description="All projects by Hitendra Kawale — AI systems, RAG pipelines, LLM evaluation platforms, and computer vision research."
+  description="Projects by Hitendra Kawale — AI systems, RAG pipelines, LLM evaluation, and computer vision."
 >
   <section class="page-header">
+    <span class="eyebrow">Work</span>
     <h1>Projects</h1>
     <p>Things I've designed, built, and shipped — or am actively building.</p>
   </section>
 
-  {built.length > 0 && (
-    <section class="group">
-      <h2 class="group-label">Built</h2>
-      <div class="card-grid">
-        {built.map(project => <ProjectCard project={project} />)}
-      </div>
-    </section>
-  )}
-
-  {inProgress.length > 0 && (
-    <section class="group">
-      <h2 class="group-label">In Progress</h2>
-      <div class="card-grid">
-        {inProgress.map(project => <ProjectCard project={project} />)}
-      </div>
-    </section>
-  )}
-
-  {research.length > 0 && (
-    <section class="group">
-      <h2 class="group-label">Research</h2>
-      <div class="card-grid">
-        {research.map(project => <ProjectCard project={project} />)}
-      </div>
-    </section>
-  )}
+  {groups.map(({ label, status }) => {
+    const list = projects.filter(p => p.status === status);
+    if (!list.length) return null;
+    return (
+      <section class="group">
+        <span class="group-label">{label}</span>
+        <div class="grid">
+          {list.map(p => <ProjectCard project={p} />)}
+        </div>
+      </section>
+    );
+  })}
 </BaseLayout>
 
 <style>
   .page-header {
-    padding: 64px 0 48px;
+    padding: 72px 0 52px;
+    border-bottom: 1px solid var(--border);
   }
 
-  .page-header h1 {
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-    font-weight: 800;
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
     letter-spacing: -0.05em;
-    margin-bottom: 10px;
+    line-height: 1;
+    margin-bottom: 14px;
   }
 
   .page-header p {
     color: var(--muted);
     font-size: 1rem;
-    margin: 0;
+    max-width: 480px;
   }
 
   .group {
-    padding: 40px 0;
-    border-top: 1px solid var(--border);
+    padding: 48px 0;
+    border-bottom: 1px solid var(--border);
   }
 
   .group-label {
-    font-size: 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 20px;
+    display: block;
+    margin-bottom: 24px;
   }
 
-  .card-grid {
+  .grid {
     display: grid;
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: 1fr; }
+    .group { padding: 36px 0; }
   }
 </style>

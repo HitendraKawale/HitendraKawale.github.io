@@ -1,12 +1,16 @@
 :root {
-  --bg: #ffffff;
-  --text: #111111;
-  --muted: #888888;
-  --border: #e8e8e8;
-  --surface: #f7f7f7;
-  --green: #16a34a;
-  --max-width: 740px;
-  --nav-height: 64px;
+  --bg:        #0b0b0b;
+  --surface:   #141414;
+  --surface-2: #1c1c1c;
+  --text:      #edede8;
+  --muted:     #4f4f4f;
+  --border:    #222222;
+  --accent:    #f97316;
+  --green:     #22c55e;
+  --mono:      ui-monospace, 'SF Mono', 'Fira Code', monospace;
+  --sans:      ui-sans-serif, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --max-width: 1000px;
+  --nav-h:     60px;
 }
 
 *, *::before, *::after {
@@ -16,7 +20,7 @@
 }
 
 html {
-  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--sans);
   background: var(--bg);
   color: var(--text);
   font-size: 16px;
@@ -30,31 +34,19 @@ body {
   flex-direction: column;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-p {
-  line-height: 1.75;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-}
+a { color: inherit; text-decoration: none; }
+p { line-height: 1.7; }
+img { display: block; max-width: 100%; }
 
 ::selection {
-  background: var(--text);
-  color: var(--bg);
+  background: var(--accent);
+  color: #000;
 }
 
-/* Scrollbar — minimal */
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
-/* Utility */
 .container {
   width: min(var(--max-width), calc(100% - 40px));
   margin-inline: auto;
