@@ -5,7 +5,10 @@ const year = new Date().getFullYear();
 
 <footer class="footer">
   <div class="container footer-inner">
-    <span class="copy">© {year} {profile.name}</span>
+    <div class="footer-brand">
+      <span class="sigil">ᛟ</span>
+      <span class="copy">{profile.name} · {year}</span>
+    </div>
     <div class="links">
       <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
       {profile.linkedin && (
@@ -19,7 +22,7 @@ const year = new Date().getFullYear();
 <style>
   .footer {
     margin-top: auto;
-    border-top: 1px solid var(--border);
+    border-top: 3px solid var(--ink);
   }
 
   .footer-inner {
@@ -27,23 +30,43 @@ const year = new Date().getFullYear();
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 24px 0;
+    padding: 20px 0;
     flex-wrap: wrap;
   }
 
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sigil {
+    font-size: 1rem;
+    color: var(--accent);
+    opacity: 0.7;
+    line-height: 1;
+  }
+
   .copy {
-    font-family: var(--mono);
-    font-size: 0.75rem;
+    font-family: var(--heading);
+    font-size: 0.62rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     color: var(--muted);
   }
 
   .links {
     display: flex;
     gap: 20px;
-    font-size: 0.8125rem;
   }
 
   .links a {
+    font-family: var(--heading);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--muted);
     transition: color 150ms;
   }

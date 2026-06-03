@@ -5,7 +5,10 @@ const { pathname } = Astro.url;
 
 <header class="nav-wrap">
   <nav class="nav container">
-    <a href="/" class="brand">HK</a>
+    <a href="/" class="brand">
+      <span class="brand-text">HK</span>
+      <span class="brand-bar"></span>
+    </a>
 
     <div class="nav-links">
       <a href="/projects" class:list={["nl", { active: pathname.startsWith("/projects") }]}>
@@ -23,13 +26,13 @@ const { pathname } = Astro.url;
 
 <style>
   .nav-wrap {
-    border-bottom: 1px solid var(--border);
+    border-bottom: 3px solid var(--ink);
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(11, 11, 11, 0.9);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(13, 11, 8, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .nav {
@@ -40,53 +43,72 @@ const { pathname } = Astro.url;
   }
 
   .brand {
-    font-family: var(--mono);
-    font-size: 0.875rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: var(--text);
-    transition: color 150ms;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 150ms;
   }
 
-  .brand:hover {
-    color: var(--accent);
+  .brand:hover { opacity: 0.7; }
+
+  .brand-text {
+    font-family: var(--heading);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--text);
+  }
+
+  .brand-bar {
+    width: 18px;
+    height: 2px;
+    background: var(--accent);
   }
 
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 4px;
   }
 
   .nl {
-    font-size: 0.875rem;
+    font-family: var(--heading);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
     color: var(--muted);
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 8px 16px;
     transition: color 150ms;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -3px;
   }
 
   .nl:hover, .nl.active {
     color: var(--text);
+    border-bottom-color: var(--accent);
   }
 
   .nl-cta {
-    font-size: 0.8125rem;
+    font-family: var(--heading);
+    font-size: 0.62rem;
     font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     padding: 7px 16px;
-    margin-left: 8px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
+    margin-left: 12px;
+    border: 2px solid var(--border);
     color: var(--text);
-    transition: border-color 150ms, color 150ms;
+    transition: border-color 150ms, color 150ms, background 150ms;
   }
 
   .nl-cta:hover {
     border-color: var(--accent);
     color: var(--accent);
+    background: rgba(139, 26, 26, 0.08);
   }
 
   @media (max-width: 500px) {
     .nl-cta { display: none; }
+    .brand-bar { display: none; }
   }
 </style>

@@ -21,6 +21,11 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
 
   <!-- ── HERO ────────────────────────────────── -->
   <section class="hero">
+    <div class="chapter-cap">
+      <span class="cap-rule"></span>
+      <span class="cap-text">ᛊ &nbsp; The Architect &nbsp; ᛊ</span>
+      <span class="cap-rule"></span>
+    </div>
     <div class="hero-grid">
 
       <div class="hero-left">
@@ -91,10 +96,34 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
 </BaseLayout>
 
 <style>
+  /* ── Chapter caption ──────────── */
+  .chapter-cap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 0 0;
+  }
+
+  .cap-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .cap-text {
+    font-family: var(--heading);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
   /* ── Hero ─────────────────────── */
   .hero {
-    padding: 80px 0 72px;
-    border-bottom: 1px solid var(--border);
+    padding: 32px 0 72px;
+    border-bottom: 3px solid var(--ink);
   }
 
   .hero-grid {
@@ -102,13 +131,15 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
     grid-template-columns: 1.05fr 0.95fr;
     gap: 48px;
     align-items: center;
+    padding-top: 40px;
   }
 
   h1 {
-    font-size: clamp(4rem, 9.5vw, 7.5rem);
+    font-family: var(--heading);
+    font-size: clamp(3.8rem, 9vw, 7rem);
     font-weight: 900;
-    letter-spacing: -0.05em;
-    line-height: 0.88;
+    letter-spacing: 0.04em;
+    line-height: 0.92;
     color: var(--text);
   }
 
@@ -135,29 +166,29 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
 
   @keyframes blink {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.25; }
+    50%       { opacity: 0.25; }
   }
 
   .status-text {
     font-family: var(--mono);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--green);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
   }
 
   .role-tag {
-    font-family: var(--mono);
-    font-size: 0.75rem;
+    font-family: var(--heading);
+    font-size: 0.62rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--muted);
   }
 
   .bio {
-    font-size: 1rem;
-    color: #888;
-    line-height: 1.75;
+    font-size: 1.05rem;
+    color: var(--muted);
+    line-height: 1.8;
   }
 
   .lang-row {
@@ -167,18 +198,18 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
     padding: 10px 0;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    font-size: 0.8rem;
   }
 
   .lang-label {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
+    font-family: var(--heading);
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--muted);
   }
 
   .lang-val {
+    font-size: 0.9rem;
     color: var(--text);
   }
 
@@ -189,31 +220,35 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
   }
 
   .hero-links a {
-    font-size: 0.875rem;
+    font-family: var(--heading);
+    font-size: 0.68rem;
     font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
     color: var(--text);
     border-bottom: 1px solid var(--border);
-    padding-bottom: 2px;
+    padding-bottom: 3px;
     transition: color 150ms, border-color 150ms;
   }
 
   .hero-links a:hover {
-    color: var(--accent);
+    color: var(--accent-hi);
     border-color: var(--accent);
   }
 
   @media (max-width: 680px) {
-    .hero { padding: 56px 0 52px; }
+    .hero { padding: 24px 0 52px; }
     .hero-grid {
       grid-template-columns: 1fr;
       gap: 36px;
+      padding-top: 32px;
     }
-    h1 { font-size: clamp(3.4rem, 13vw, 5rem); }
+    h1 { font-size: clamp(3rem, 13vw, 5rem); }
   }
 
   /* ── Stack strip ──────────────── */
   .strip {
-    padding: 20px 0;
+    padding: 18px 0;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: baseline;
@@ -222,10 +257,10 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
   }
 
   .strip-label {
-    font-family: var(--mono);
-    font-size: 0.68rem;
+    font-family: var(--heading);
+    font-size: 0.6rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--accent);
     flex-shrink: 0;
@@ -233,7 +268,7 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
 
   .strip-content {
     font-family: var(--mono);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--muted);
     line-height: 1.9;
   }
@@ -252,29 +287,31 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
   }
 
   .section-label {
-    font-family: var(--mono);
-    font-size: 0.68rem;
+    font-family: var(--heading);
+    font-size: 0.6rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
     color: var(--accent);
   }
 
   .section-more {
-    font-size: 0.8125rem;
+    font-family: var(--heading);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
     color: var(--muted);
     transition: color 150ms;
   }
 
-  .section-more:hover {
-    color: var(--text);
-  }
+  .section-more:hover { color: var(--text); }
 
   /* ── Projects grid ────────────── */
   .project-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 14px;
+    gap: 18px;
   }
 
   @media (max-width: 620px) {

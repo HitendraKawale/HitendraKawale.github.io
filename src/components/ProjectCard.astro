@@ -8,48 +8,68 @@ interface Props {
 const { project } = Astro.props;
 
 const statusColor: Record<Project["status"], string> = {
-  "Built":       "#22c55e",
-  "In Progress": "#f97316",
-  "Research":    "#818cf8",
+  "Built":       "var(--accent-hi)",
+  "In Progress": "#c8922a",
+  "Research":    "#8a7c5a",
 };
 ---
 
 <article class="card">
-  <header class="card-top">
-    <span class="status" style={`color: ${statusColor[project.status]}`}>
-      {project.status}
-    </span>
-    <span class="subtitle">{project.subtitle}</span>
-  </header>
+  <div class="card-cap"></div>
 
-  <h3>{project.title}</h3>
-  <p class="desc">{project.description}</p>
+  <div class="card-body">
+    <header class="card-top">
+      <span class="status" style={`color: ${statusColor[project.status]}`}>
+        {project.status}
+      </span>
+      <span class="subtitle">{project.subtitle}</span>
+    </header>
 
-  <div class="stack">
-    {project.stack.map(t => <span class="pill">{t}</span>)}
+    <h3>{project.title}</h3>
+    <p class="desc">{project.description}</p>
+
+    <div class="stack">
+      {project.stack.map(t => <span class="pill">{t}</span>)}
+    </div>
+
+    {project.href && (
+      <a class="clink" href={project.href} target="_blank" rel="noreferrer">
+        View project <span class="clink-arrow">↗</span>
+      </a>
+    )}
   </div>
-
-  {project.href && (
-    <a class="clink" href={project.href} target="_blank" rel="noreferrer">
-      View project ↗
-    </a>
-  )}
 </article>
 
 <style>
   .card {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 24px;
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    transition: border-color 200ms;
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 0 var(--ink);
+    transition: box-shadow 200ms, transform 200ms;
   }
 
   .card:hover {
-    border-color: var(--accent);
+    box-shadow: 6px 6px 0 0 var(--accent);
+    transform: translate(-1px, -1px);
+  }
+
+  /* Halftone dot cap — classic manga screen tone */
+  .card-cap {
+    height: 28px;
+    background-color: var(--ink);
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 5px 5px;
+    flex-shrink: 0;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px 22px 22px;
+    flex: 1;
   }
 
   .card-top {
@@ -61,27 +81,30 @@ const statusColor: Record<Project["status"], string> = {
 
   .status {
     font-family: var(--mono);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
   .subtitle {
-    font-size: 0.78rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
     color: var(--muted);
     text-align: right;
   }
 
   h3 {
-    font-size: 1.2rem;
+    font-family: var(--heading);
+    font-size: 1.1rem;
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: 0.05em;
     color: var(--text);
+    line-height: 1.25;
   }
 
   .desc {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--muted);
     line-height: 1.65;
     flex: 1;
@@ -95,26 +118,37 @@ const statusColor: Record<Project["status"], string> = {
 
   .pill {
     font-family: var(--mono);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     padding: 3px 9px;
     border: 1px solid var(--border);
-    border-radius: 3px;
     color: var(--muted);
     background: var(--surface-2);
   }
 
   .clink {
-    font-size: 0.8125rem;
+    font-family: var(--heading);
+    font-size: 0.68rem;
     font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--muted);
     width: fit-content;
     transition: color 150ms;
     margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
-  .clink:hover {
-    color: var(--accent);
+  .clink:hover { color: var(--accent-hi); }
+
+  .clink-arrow {
+    transition: transform 150ms;
+    display: inline-block;
+    font-style: normal;
   }
+
+  .clink:hover .clink-arrow { transform: translate(2px, -2px); }
 
   @media (max-width: 560px) {
     .card-top { flex-direction: column; align-items: flex-start; }

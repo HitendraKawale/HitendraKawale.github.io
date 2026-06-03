@@ -38,32 +38,34 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
 <style>
   .page-header {
     padding: 72px 0 52px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 3px solid var(--ink);
   }
 
   .eyebrow {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
+    font-family: var(--heading);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--accent);
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
   }
 
   h1 {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-family: var(--heading);
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
     font-weight: 900;
-    letter-spacing: -0.05em;
+    letter-spacing: 0.06em;
     line-height: 1;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }
 
   .page-header p {
+    font-size: 1.05rem;
     color: var(--muted);
-    font-size: 1rem;
     max-width: 480px;
+    line-height: 1.75;
   }
 
   .group {
@@ -72,10 +74,10 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
   }
 
   .group-label {
-    font-family: var(--mono);
-    font-size: 0.68rem;
+    font-family: var(--heading);
+    font-size: 0.6rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
     color: var(--muted);
     display: block;
@@ -85,7 +87,7 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 14px;
+    gap: 18px;
   }
 
   @media (max-width: 560px) {

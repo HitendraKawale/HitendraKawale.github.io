@@ -18,7 +18,7 @@ Static output — no adapter needed. Push to GitHub, import the repo in Vercel, 
 
 ## Architecture
 
-Multi-page Astro 6 portfolio. Five routes:
+Multi-page Astro 6 portfolio. Four routes:
 
 | Route | File |
 |---|---|
@@ -29,16 +29,42 @@ Multi-page Astro 6 portfolio. Five routes:
 
 **Layouts:**
 - `BaseLayout.astro` — shell (`<head>`, `Nav`, `<main>`, `Footer`). Requires `title` and `description` props.
-- `PostLayout.astro` — wraps `BaseLayout` for blog posts. Takes a `frontmatter` prop with the post's typed data.
+- `PostLayout.astro` — wraps `BaseLayout` for blog posts. Takes a `frontmatter` prop with the post's typed data. Never referenced from markdown frontmatter — `[slug].astro` calls `render(post)` and passes `post.data` as `frontmatter`.
 
 **Components:** `Nav`, `Footer`, `ProjectCard`, `BlogCard`. All are self-contained Astro components with scoped `<style>` blocks.
 
-**Design tokens** live in `src/styles/global.css` as CSS custom properties (`--bg`, `--text`, `--muted`, `--border`, `--surface`, `--green`, `--max-width`). Imported once in `BaseLayout`.
+**Design tokens** live in `src/styles/global.css` as CSS custom properties. Imported once in `BaseLayout`. The site uses a Berserk-inspired dark editorial theme.
+
+| Token | Value | Usage |
+|---|---|---|
+| `--bg` | `#0d0b08` | Page background (warm near-black) |
+| `--surface` | `#141210` | Card/panel background |
+| `--surface-2` | `#1e1b17` | Elevated surface |
+| `--text` | `#e8e0d0` | Primary text (aged paper cream) |
+| `--muted` | `#6b6258` | Secondary/muted text |
+| `--border` | `#2e2820` | Dividers and borders |
+| `--accent` | `#8b1a1a` | Blood red — section labels, hover |
+| `--accent-hi` | `#c0392b` | Brighter red — active hover states |
+| `--ink` | `#000000` | Panel borders (nav, cards, hero) |
+| `--green` | `#22c55e` | Availability status dot |
+| `--heading` | Cinzel serif | Headings, nav, labels |
+| `--body` | Crimson Text serif | Body copy |
+| `--mono` | system monospace | Code and technical labels |
+| `--max-width` | `1000px` | Content container width |
+| `--nav-h` | `64px` | Nav bar height |
+
+Google Fonts (`Cinzel` + `Crimson Text`) are loaded via `<link>` in `BaseLayout.astro`. A subtle paper grain texture is applied as a fixed `body::after` pseudo-element using an inline SVG `feTurbulence` filter.
+
+## Home page content selection
+
+`src/pages/index.astro` renders:
+- **Featured projects**: `projects.filter(p => p.featured)` — up to 3 recommended
+- **Recent posts**: 3 latest non-draft posts, sorted descending by date
 
 ## Content — how to update things
 
 ### Add a project
-Edit `src/data/projects.ts` — append to the `projects` array. Set `featured: true` to show it on the home page (keep to ≤3). Status must be `"Built" | "Research" | "In Progress"`.
+Edit `src/data/projects.ts` — append to the `projects` array. Set `featured: true` to show it on the home page (keep to ≤3). Status must be `"Built" | "Research" | "In Progress"`. `href` is optional.
 
 ### Add a blog post
 Create a Markdown file in `src/content/blog/your-slug.md`. Required frontmatter:
@@ -53,11 +79,11 @@ draft: false              # set true to hide
 ---
 ```
 
-The filename becomes the URL slug (e.g., `my-post.md` → `/blog/my-post`).
+The filename becomes the URL slug (e.g., `my-post.md` → `/blog/my-post`). Do not add a `layout:` key — `[slug].astro` wires the layout automatically via the content layer.
 
 ### Update personal info, skills, languages
 Edit `src/data/profile.ts`. All pages pull from this single source.
 
 ## Content collections
 
-Blog uses the Astro content layer with a `glob` loader (`src/content.config.ts`). The collection is typed — adding a post with missing required frontmatter will fail the build, which is intentional.
+Blog uses the Astro content layer with a `glob` loader (`src/content.config.ts`). The collection is typed — adding a post with missing required frontmatter will fail the build, which is intentional. Drafts are filtered out at query time via `getCollection("blog", ({ data }) => !data.draft)`.

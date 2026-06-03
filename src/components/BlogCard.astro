@@ -30,35 +30,47 @@ const formatted = new Intl.DateTimeFormat("en-US", {
     padding: 22px 0;
     border-bottom: 1px solid var(--border);
     transition: color 150ms;
+    position: relative;
   }
 
-  .post-row:first-child {
-    border-top: 1px solid var(--border);
+  /* Ink bar slides in from left on hover */
+  .post-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: var(--accent);
+    transition: width 200ms ease;
   }
 
-  .post-row:hover { color: var(--accent); }
+  .post-row:hover::before { width: 3px; }
+
+  .post-row:first-child { border-top: 1px solid var(--border); }
 
   time {
     font-family: var(--mono);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--muted);
     padding-top: 3px;
     white-space: nowrap;
-    transition: color 150ms;
   }
-
-  .post-row:hover time { color: var(--muted); }
 
   h3 {
+    font-family: var(--heading);
     font-size: 1rem;
     font-weight: 600;
-    letter-spacing: -0.02em;
-    margin-bottom: 4px;
+    letter-spacing: 0.04em;
+    margin-bottom: 5px;
+    color: var(--text);
     transition: color 150ms;
   }
 
+  .post-row:hover h3 { color: var(--accent-hi); }
+
   p {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--muted);
     line-height: 1.5;
   }
@@ -71,7 +83,7 @@ const formatted = new Intl.DateTimeFormat("en-US", {
   }
 
   .post-row:hover .arrow {
-    color: var(--accent);
+    color: var(--accent-hi);
     transform: translate(2px, -2px);
   }
 

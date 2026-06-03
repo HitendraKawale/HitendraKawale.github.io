@@ -51,8 +51,11 @@ const formatted = new Intl.DateTimeFormat("en-US", {
 
   .back {
     display: inline-block;
-    font-family: var(--mono);
-    font-size: 0.78rem;
+    font-family: var(--heading);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 36px;
     transition: color 150ms;
@@ -61,9 +64,10 @@ const formatted = new Intl.DateTimeFormat("en-US", {
   .back:hover { color: var(--accent); }
 
   h1 {
+    font-family: var(--heading);
     font-size: clamp(1.75rem, 4vw, 2.6rem);
-    font-weight: 800;
-    letter-spacing: -0.04em;
+    font-weight: 900;
+    letter-spacing: 0.04em;
     line-height: 1.15;
     margin-bottom: 18px;
   }
@@ -74,24 +78,26 @@ const formatted = new Intl.DateTimeFormat("en-US", {
     flex-wrap: wrap;
     gap: 14px;
     padding-bottom: 40px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px solid var(--ink);
     margin-bottom: 40px;
   }
 
   time {
     font-family: var(--mono);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     color: var(--muted);
   }
 
   .tags { display: flex; gap: 6px; flex-wrap: wrap; }
 
   .tag {
-    font-family: var(--mono);
-    font-size: 0.68rem;
+    font-family: var(--heading);
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
     padding: 3px 10px;
     border: 1px solid var(--border);
-    border-radius: 3px;
     color: var(--muted);
     background: var(--surface);
   }
