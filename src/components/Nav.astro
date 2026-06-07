@@ -6,7 +6,7 @@ const { pathname } = Astro.url;
 <header class="nav-wrap">
   <nav class="nav container">
     <a href="/" class="brand">
-      <span class="brand-text">HK</span>
+      <span class="brand-text">泽贤</span>
       <span class="brand-bar"></span>
     </a>
 
@@ -17,7 +17,7 @@ const { pathname } = Astro.url;
       <a href="/blog" class:list={["nl", { active: pathname.startsWith("/blog") }]}>
         Blog
       </a>
-      <a href={`mailto:${profile.email}`} class="nl-cta">
+      <a href="/contact" class:list={["nl-cta", { active: pathname === "/contact" }]}>
         Get in touch
       </a>
     </div>
@@ -52,17 +52,19 @@ const { pathname } = Astro.url;
   .brand:hover { opacity: 0.7; }
 
   .brand-text {
-    font-family: var(--heading);
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
+    font-family: 'Noto Serif SC', 'STSong', 'SimSun', serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
     color: var(--text);
+    line-height: 1;
   }
 
   .brand-bar {
     width: 18px;
     height: 2px;
     background: var(--accent);
+    flex-shrink: 0;
   }
 
   .nav-links {
@@ -101,7 +103,7 @@ const { pathname } = Astro.url;
     transition: border-color 150ms, color 150ms, background 150ms;
   }
 
-  .nl-cta:hover {
+  .nl-cta:hover, .nl-cta.active {
     border-color: var(--accent);
     color: var(--accent);
     background: rgba(139, 26, 26, 0.08);

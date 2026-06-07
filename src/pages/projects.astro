@@ -21,7 +21,16 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
     <p>Things I've designed, built, and shipped — or am actively building.</p>
   </section>
 
-  {groups.map(({ label, status }) => {
+  {projects.length === 0 ? (
+    <div class="empty-panel">
+      <div class="empty-cap"></div>
+      <div class="empty-body">
+        <span class="empty-title">Work in Progress</span>
+        <span class="empty-sub">Projects are being forged. Return soon.</span>
+      </div>
+      <div class="empty-cap"></div>
+    </div>
+  ) : groups.map(({ label, status }) => {
     const list = projects.filter(p => p.status === status);
     if (!list.length) return null;
     return (
@@ -88,6 +97,46 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 18px;
+  }
+
+  /* ── Empty state ──────────────── */
+  .empty-panel {
+    margin: 52px 0 96px;
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 0 var(--ink);
+  }
+
+  .empty-cap {
+    height: 24px;
+    background-color: var(--ink);
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 5px 5px;
+  }
+
+  .empty-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 72px 24px;
+    background: var(--surface);
+  }
+
+  .empty-title {
+    font-family: var(--heading);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .empty-sub {
+    font-family: var(--body);
+    font-size: 1rem;
+    color: var(--muted);
+    font-style: italic;
   }
 
   @media (max-width: 560px) {

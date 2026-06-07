@@ -1,0 +1,187 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { profile } from "../data/profile";
+
+const contacts = [
+  {
+    label: "Email",
+    value: profile.email,
+    href: `mailto:${profile.email}`,
+  },
+  {
+    label: "GitHub",
+    value: "@" + profile.github.split("/").pop(),
+    href: profile.github,
+    external: true,
+  },
+  ...(profile.linkedin ? [{
+    label: "LinkedIn",
+    value: profile.linkedin.replace("https://www.", "").replace("https://", ""),
+    href: profile.linkedin,
+    external: true,
+  }] : []),
+];
+---
+
+<BaseLayout
+  title={`Contact — ${profile.name}`}
+  description="Get in touch with Hitendra Kawale — AI engineer open to roles and collaborations."
+>
+  <section class="page-header">
+    <div class="chapter-cap">
+      <span class="cap-rule"></span>
+      <span class="cap-text">ᛊ &nbsp; Reach Out &nbsp; ᛊ</span>
+      <span class="cap-rule"></span>
+    </div>
+    <span class="eyebrow">Contact</span>
+    <h1>Get In Touch</h1>
+    <p>Open to conversations about AI engineering roles, interesting problems, and collaborations.</p>
+  </section>
+
+  <section class="contact-grid">
+    {contacts.map(c => (
+      <a
+        class="contact-card"
+        href={c.href}
+        target={c.external ? "_blank" : undefined}
+        rel={c.external ? "noreferrer" : undefined}
+      >
+        <div class="card-cap"></div>
+        <div class="card-body">
+          <span class="card-label">{c.label}</span>
+          <span class="card-value">{c.value}</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── Chapter cap ──────────────────── */
+  .chapter-cap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 0 0;
+  }
+  .cap-rule { flex: 1; height: 1px; background: var(--border); }
+  .cap-text {
+    font-family: var(--heading);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* ── Page header ──────────────────── */
+  .page-header {
+    padding: 32px 0 52px;
+    border-bottom: 3px solid var(--ink);
+  }
+
+  .eyebrow {
+    font-family: var(--heading);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin: 24px 0 16px;
+  }
+
+  h1 {
+    font-family: var(--heading);
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .page-header p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.75;
+  }
+
+  /* ── Contact grid ─────────────────── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+    padding: 52px 0 96px;
+  }
+
+  /* ── Contact card ─────────────────── */
+  .contact-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 0 var(--ink);
+    transition: box-shadow 200ms, transform 200ms;
+  }
+
+  .contact-card:hover {
+    box-shadow: 6px 6px 0 0 var(--accent);
+    transform: translate(-1px, -1px);
+  }
+
+  .card-cap {
+    height: 28px;
+    background-color: var(--ink);
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 5px 5px;
+    flex-shrink: 0;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 22px 24px 24px;
+  }
+
+  .card-label {
+    font-family: var(--heading);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .card-value {
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    color: var(--text);
+    word-break: break-all;
+    line-height: 1.5;
+  }
+
+  .card-arrow {
+    font-size: 1.1rem;
+    color: var(--muted);
+    transition: color 150ms, transform 150ms;
+    align-self: flex-end;
+    margin-top: 10px;
+    display: inline-block;
+  }
+
+  .contact-card:hover .card-arrow {
+    color: var(--accent-hi);
+    transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 560px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      padding: 36px 0 72px;
+    }
+  }
+</style>
