@@ -1,12 +1,12 @@
 ---
 title: "How Lockdown Turned Me Into a Polyglot"
 description: "The world shut down, so I moved into Discord language servers — three weeks to a Spanish accent that fooled natives, then Mandarin, and a dozen scripts down the rabbit hole."
-date: 2020-10-25
+date: 2022-03-12
 tags: ["Life", "Languages"]
 draft: false
 ---
 
-When the lockdowns hit, everyone I knew picked up something — sourdough, chess, day trading. I fell into language servers on Discord, and seven months later I'm functionally living in four languages and reading about eight scripts. This is the story of how that happened, mostly by accident.
+When the lockdowns hit, everyone I knew picked up something — sourdough, chess, day trading. I fell into language servers on Discord, and two years later I'm functionally living in four languages and reading about eight scripts. This is the story of how that happened, mostly by accident.
 
 ## It started with Spanish
 
