@@ -144,7 +144,8 @@ const langLine = [...main, `${basics.join(", ")} (basics)`].join(" · ");
     position: relative;
   }
 
-  /* The Eclipse — looming behind the name */
+  /* The Eclipse — looming behind the name. Three layers:
+     base ring (the original), a swirling blood vortex, a shaded black sun. */
   .eclipse {
     position: absolute;
     width: min(560px, 90vw);
@@ -164,9 +165,61 @@ const langLine = [...main, `${basics.join(", ")} (basics)`].join(" · ");
     pointer-events: none;
   }
 
+  /* Swirling vortex — uneven conic streaks confined to the ring, slowly rotating */
+  .eclipse::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(192, 57, 43, 0.55) 38deg,
+      transparent 85deg,
+      rgba(139, 26, 26, 0.4) 130deg,
+      transparent 185deg,
+      rgba(192, 57, 43, 0.45) 235deg,
+      transparent 290deg,
+      rgba(139, 26, 26, 0.35) 330deg,
+      transparent 360deg
+    );
+    -webkit-mask: radial-gradient(circle, transparent 37%, #000 45%, #000 57%, transparent 66%);
+            mask: radial-gradient(circle, transparent 37%, #000 45%, #000 57%, transparent 66%);
+    filter: blur(7px);
+    animation: eclipseSpin 38s linear infinite;
+  }
+
+  /* The black sun — sphere-shaded core, blood rim light, slow throb */
+  .eclipse::after {
+    content: '';
+    position: absolute;
+    inset: 26%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 36% 30%, #221310 0%, #0f0c09 48%, #000 78%);
+    box-shadow:
+      0 0 28px 6px rgba(139, 26, 26, 0.4),
+      0 0 90px 24px rgba(139, 26, 26, 0.16),
+      inset -16px -20px 44px rgba(0, 0, 0, 0.92),
+      inset 7px 9px 26px rgba(192, 57, 43, 0.22);
+    animation: coreThrob 7s ease-in-out infinite;
+  }
+
   @keyframes eclipsePulse {
     0%, 100% { opacity: 0.7; transform: scale(1); }
     50%      { opacity: 1;   transform: scale(1.03); }
+  }
+
+  @keyframes eclipseSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes coreThrob {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.045); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eclipse, .eclipse::before, .eclipse::after { animation: none; }
   }
 
   .hero-grid, .chapter-cap { position: relative; }
