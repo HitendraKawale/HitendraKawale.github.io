@@ -13,9 +13,9 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
   description="Writing on AI engineering, RAG systems, LLM evaluation, and applied machine learning."
 >
   <section class="page-header">
-    <span class="eyebrow">Writing</span>
-    <h1>Blog</h1>
-    <p>Notes on AI engineering, systems thinking, and things I'm building.</p>
+    <span class="eyebrow">Writing — Dispatches From the Road</span>
+    <h1>The Chronicles</h1>
+    <p>Notes on AI engineering, systems thinking, and the long struggle of building things that work.</p>
   </section>
 
   <section class="post-section">
@@ -42,18 +42,18 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 
   .eyebrow {
     font-family: var(--heading);
-    font-size: 0.62rem;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-hi);
     display: block;
     margin-bottom: 16px;
   }
 
   h1 {
     font-family: var(--heading);
-    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
     font-weight: 900;
     letter-spacing: 0.06em;
     line-height: 1;
@@ -61,7 +61,7 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
   }
 
   .page-header p {
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--muted);
     max-width: 480px;
     line-height: 1.75;
@@ -97,7 +97,7 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 
   .empty-title {
     font-family: var(--heading);
-    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-size: clamp(1.25rem, 2.6vw, 1.7rem);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;

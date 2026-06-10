@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import BlogCard from "../components/BlogCard.astro";
+import Brand from "../components/Brand.astro";
 import { projects } from "../data/projects";
 import { profile } from "../data/profile";
 import { getCollection } from "astro:content";
@@ -11,7 +12,13 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
   .slice(0, 3);
 
 const featured = projects.filter(p => p.featured);
-const langLine = profile.languages.map(l => l.name).join(" · ");
+
+// Polyglot line: keep profile order, tag non-fluent levels inline
+const main = profile.languages
+  .filter(l => l.level !== "Basic")
+  .map(l => (l.level === "Conversational" ? `${l.name} (conversational)` : l.name));
+const basics = profile.languages.filter(l => l.level === "Basic").map(l => l.name);
+const langLine = [...main, `${basics.join(", ")} (basics)`].join(" · ");
 ---
 
 <BaseLayout
@@ -21,9 +28,12 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
 
   <!-- ── HERO ────────────────────────────────── -->
   <section class="hero">
+    <div class="eclipse" aria-hidden="true"></div>
     <div class="chapter-cap">
       <span class="cap-rule"></span>
-      <span class="cap-text">ᛊ &nbsp; The Logician &nbsp; ᛊ</span>
+      <Brand size={14} />
+      <span class="cap-text">Chapter I &nbsp;·&nbsp; The Struggler</span>
+      <Brand size={14} />
       <span class="cap-rule"></span>
     </div>
     <div class="hero-grid">
@@ -33,6 +43,10 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
           {profile.name.split(" ")[0]}<br />
           {profile.name.split(" ")[1]}
         </h1>
+        <p class="epigraph">
+          "If you're a struggler — struggle, endure, contend."
+          <span class="epigraph-src">— The Skull Knight</span>
+        </p>
       </div>
 
       <div class="hero-right">
@@ -45,11 +59,12 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
         <p class="bio">{profile.bio}</p>
 
         <div class="lang-row">
-          <span class="lang-label">Speaks</span>
+          <span class="lang-label">Polyglot</span>
           <span class="lang-val">{langLine}</span>
         </div>
 
         <nav class="hero-links">
+          <a href={profile.resume} download="Hitendra-Kawale-Resume.pdf" class="resume-link">Resume ↓</a>
           <a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
           <a href="/contact">Contact</a>
           {profile.linkedin && (
@@ -61,9 +76,9 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
     </div>
   </section>
 
-  <!-- ── STACK ────────────────────────────────── -->
+  <!-- ── ARSENAL ─────────────────────────────── -->
   <section class="strip">
-    <span class="strip-label">Stack</span>
+    <span class="strip-label">Arsenal</span>
     <p class="strip-content">{profile.skills.join(" · ")}</p>
   </section>
 
@@ -71,9 +86,9 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
   {featured.length > 0 && (
     <section class="section">
       <div class="section-head">
-        <span class="section-label">Selected work</span>
+        <span class="section-label">Deeds</span>
         <span class="head-rule"></span>
-        <a href="/projects" class="section-more">All projects ↗</a>
+        <a href="/projects" class="section-more">The full armoury ↗</a>
       </div>
       <div class="project-grid">
         {featured.map(p => <ProjectCard project={p} />)}
@@ -85,9 +100,9 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
   {posts.length > 0 && (
     <section class="section">
       <div class="section-head">
-        <span class="section-label">Writing</span>
+        <span class="section-label">Chronicles</span>
         <span class="head-rule"></span>
-        <a href="/blog" class="section-more">All posts ↗</a>
+        <a href="/blog" class="section-more">All chronicles ↗</a>
       </div>
       <div>
         {posts.map(post => <BlogCard post={post} />)}
@@ -114,11 +129,11 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
 
   .cap-text {
     font-family: var(--heading);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-hi);
     white-space: nowrap;
   }
 
@@ -126,6 +141,56 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
   .hero {
     padding: 32px 0 72px;
     border-bottom: 3px solid var(--ink);
+    position: relative;
+  }
+
+  /* The Eclipse — looming behind the name */
+  .eclipse {
+    position: absolute;
+    width: min(560px, 90vw);
+    aspect-ratio: 1;
+    left: min(-60px, -4vw);
+    top: -20px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      transparent 39%,
+      rgba(139, 26, 26, 0.5) 46%,
+      rgba(192, 57, 43, 0.16) 53%,
+      transparent 63%
+    );
+    filter: blur(5px);
+    animation: eclipsePulse 7s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes eclipsePulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.03); }
+  }
+
+  .hero-grid, .chapter-cap { position: relative; }
+
+  .epigraph {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--muted);
+    margin-top: 24px;
+    max-width: 360px;
+    line-height: 1.7;
+  }
+
+  .epigraph-src {
+    display: block;
+    font-family: var(--heading);
+    font-style: normal;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-hi);
+    margin-top: 8px;
   }
 
   .hero-grid {
@@ -138,7 +203,7 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
 
   h1 {
     font-family: var(--heading);
-    font-size: clamp(3.8rem, 9vw, 7rem);
+    font-size: clamp(3rem, 7.5vw, 5.2rem);
     font-weight: 900;
     letter-spacing: 0.04em;
     line-height: 0.92;
@@ -188,7 +253,7 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
   }
 
   .bio {
-    font-size: 1.05rem;
+    font-size: 0.98rem;
     color: var(--muted);
     line-height: 1.8;
   }
@@ -238,6 +303,16 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
     border-color: var(--accent);
   }
 
+  .hero-links .resume-link {
+    color: var(--accent-hi);
+    border-color: var(--accent);
+  }
+
+  .hero-links .resume-link:hover {
+    color: var(--text);
+    border-color: var(--text);
+  }
+
   @media (max-width: 680px) {
     .hero { padding: 24px 0 52px; }
     .hero-grid {
@@ -245,7 +320,7 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
       gap: 36px;
       padding-top: 32px;
     }
-    h1 { font-size: clamp(3rem, 13vw, 5rem); }
+    h1 { font-size: clamp(2.6rem, 11vw, 3.8rem); }
   }
 
   /* ── Stack strip ──────────────── */
@@ -260,11 +335,11 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
 
   .strip-label {
     font-family: var(--heading);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-hi);
     flex-shrink: 0;
   }
 
@@ -296,11 +371,11 @@ const langLine = profile.languages.map(l => l.name).join(" · ");
 
   .section-label {
     font-family: var(--heading);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-hi);
   }
 
   .section-more {

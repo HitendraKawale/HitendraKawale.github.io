@@ -1,24 +1,24 @@
 ---
-import { profile } from "../data/profile";
+import Brand from "./Brand.astro";
 const { pathname } = Astro.url;
 ---
 
 <header class="nav-wrap">
   <nav class="nav container">
-    <a href="/" class="brand">
+    <a href="/" class="brand" title="The Struggler">
+      <Brand size={26} />
       <span class="brand-text">泽贤</span>
-      <span class="brand-bar"></span>
     </a>
 
     <div class="nav-links">
       <a href="/projects" class:list={["nl", { active: pathname.startsWith("/projects") }]}>
-        Projects
+        Armoury
       </a>
       <a href="/blog" class:list={["nl", { active: pathname.startsWith("/blog") }]}>
-        Blog
+        Chronicles
       </a>
       <a href="/contact" class:list={["nl-cta", { active: pathname === "/contact" }]}>
-        Get in touch
+        Send Word
       </a>
     </div>
   </nav>
@@ -35,6 +35,15 @@ const { pathname } = Astro.url;
     -webkit-backdrop-filter: blur(12px);
   }
 
+  /* Thin blood line under the ink border */
+  .nav-wrap::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--accent) 70%, transparent);
+    opacity: 0.55;
+  }
+
   .nav {
     display: flex;
     align-items: center;
@@ -46,10 +55,15 @@ const { pathname } = Astro.url;
     display: flex;
     align-items: center;
     gap: 10px;
-    transition: opacity 150ms;
   }
 
-  .brand:hover { opacity: 0.7; }
+  .brand:hover :global(.brand-mark) {
+    filter: drop-shadow(0 0 8px rgba(192, 57, 43, 0.9));
+  }
+
+  .brand :global(.brand-mark) {
+    transition: filter 200ms;
+  }
 
   .brand-text {
     font-family: 'Noto Serif SC', 'STSong', 'SimSun', serif;
@@ -58,14 +72,10 @@ const { pathname } = Astro.url;
     letter-spacing: 0.08em;
     color: var(--text);
     line-height: 1;
+    transition: color 150ms;
   }
 
-  .brand-bar {
-    width: 18px;
-    height: 2px;
-    background: var(--accent);
-    flex-shrink: 0;
-  }
+  .brand:hover .brand-text { color: var(--accent-hi); }
 
   .nav-links {
     display: flex;
@@ -111,6 +121,6 @@ const { pathname } = Astro.url;
 
   @media (max-width: 500px) {
     .nl-cta { display: none; }
-    .brand-bar { display: none; }
+    .brand-text { display: none; }
   }
 </style>

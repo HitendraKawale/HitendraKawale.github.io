@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import Brand from "../components/Brand.astro";
 
 interface Props {
   frontmatter: {
@@ -23,7 +24,7 @@ const formatted = new Intl.DateTimeFormat("en-US", {
 >
   <article class="post">
     <header class="post-header">
-      <a href="/blog" class="back">← All posts</a>
+      <a href="/blog" class="back">← All chronicles</a>
 
       <h1>{frontmatter.title}</h1>
 
@@ -39,6 +40,12 @@ const formatted = new Intl.DateTimeFormat("en-US", {
 
     <div class="prose">
       <slot />
+    </div>
+
+    <div class="post-end" aria-hidden="true">
+      <span class="end-rule"></span>
+      <Brand size={22} />
+      <span class="end-rule"></span>
     </div>
   </article>
 </BaseLayout>
@@ -180,5 +187,19 @@ const formatted = new Intl.DateTimeFormat("en-US", {
     border: none;
     border-top: 1px solid var(--border);
     margin: 48px 0;
+  }
+
+  /* ── End-of-chapter sigil ─────── */
+  .post-end {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 64px;
+  }
+
+  .end-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
   }
 </style>

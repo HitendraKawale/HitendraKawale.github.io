@@ -16,17 +16,17 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
   description="Projects by Hitendra Kawale — AI systems, RAG pipelines, LLM evaluation, and computer vision."
 >
   <section class="page-header">
-    <span class="eyebrow">Work</span>
-    <h1>Projects</h1>
-    <p>Things I've designed, built, and shipped — or am actively building.</p>
+    <span class="eyebrow">Projects — Forged, Not Found</span>
+    <h1>The Armoury</h1>
+    <p>Every weapon here was designed, built, and shipped by hand — or is still on the anvil.</p>
   </section>
 
   {projects.length === 0 ? (
     <div class="empty-panel">
       <div class="empty-cap"></div>
       <div class="empty-body">
-        <span class="empty-title">Work in Progress</span>
-        <span class="empty-sub">Projects are being forged. Return soon.</span>
+        <span class="empty-title">The Dragonslayer Is Being Forged</span>
+        <span class="empty-sub">It'll be too big to be called a project. Massive, thick, heavy, and far too rough.</span>
       </div>
       <div class="empty-cap"></div>
     </div>
@@ -52,18 +52,18 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
 
   .eyebrow {
     font-family: var(--heading);
-    font-size: 0.62rem;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-hi);
     display: block;
     margin-bottom: 16px;
   }
 
   h1 {
     font-family: var(--heading);
-    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
     font-weight: 900;
     letter-spacing: 0.06em;
     line-height: 1;
@@ -71,7 +71,7 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
   }
 
   .page-header p {
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--muted);
     max-width: 480px;
     line-height: 1.75;
@@ -125,7 +125,7 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
 
   .empty-title {
     font-family: var(--heading);
-    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-size: clamp(1.25rem, 2.6vw, 1.7rem);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;

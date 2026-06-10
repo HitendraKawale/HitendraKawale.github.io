@@ -31,7 +31,9 @@ Multi-page Astro 6 portfolio. Four routes:
 - `BaseLayout.astro` — shell (`<head>`, `Nav`, `<main>`, `Footer`). Requires `title` and `description` props.
 - `PostLayout.astro` — wraps `BaseLayout` for blog posts. Takes a `frontmatter` prop with the post's typed data. Never referenced from markdown frontmatter — `[slug].astro` calls `render(post)` and passes `post.data` as `frontmatter`.
 
-**Components:** `Nav`, `Footer`, `ProjectCard`, `BlogCard`. All are self-contained Astro components with scoped `<style>` blocks.
+**Components:** `Nav`, `Footer`, `ProjectCard`, `BlogCard`, `Brand`. All are self-contained Astro components with scoped `<style>` blocks.
+
+**Berserk identity layer** (deliberate, do not "professionalize" away): `Brand.astro` is a stylized Brand of Sacrifice SVG sigil (colored via `currentColor`, accepts a `size` prop) used in the nav, footer, hero chapter cap, post end-marks, and `public/favicon.svg`. Nav labels are Armoury (/projects), Chronicles (/blog), Send Word (/contact); the nav brand reads "Struggler". The home hero has a pulsing red eclipse (`.eclipse`) behind the name, a "Chapter I · The Struggler" cap, and a Skull Knight epigraph; the footer carries the Berserk Volume 1 causality narration. Page h1s: "The Armoury", "The Chronicles", "Send Word". Empty states reference the Dragonslayer.
 
 **Design tokens** live in `src/styles/global.css` as CSS custom properties. Imported once in `BaseLayout`. The site uses a Berserk-inspired dark editorial theme.
 

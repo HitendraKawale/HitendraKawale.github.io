@@ -1,13 +1,25 @@
 ---
+import Brand from "./Brand.astro";
 import { profile } from "../data/profile";
 const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
+  <div class="container epigraph">
+    <Brand size={28} />
+    <p class="epigraph-text">
+      In this world, is the destiny of mankind controlled by some transcendental
+      entity or law? At least it is true that man has no control, even over his own will.
+    </p>
+    <span class="epigraph-source">Berserk — Volume 1</span>
+  </div>
+
+  <div class="footer-rule"></div>
+
   <div class="container footer-inner">
     <div class="footer-brand">
-      <span class="sigil">ᛟ</span>
-      <span class="copy">{profile.name} · {year}</span>
+      <Brand size={16} />
+      <span class="copy">{profile.name} · {year} · Struggler</span>
     </div>
     <div class="links">
       <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
@@ -25,6 +37,38 @@ const year = new Date().getFullYear();
     border-top: 3px solid var(--ink);
   }
 
+  .epigraph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 44px 0 36px;
+    text-align: center;
+  }
+
+  .epigraph-text {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: 0.98rem;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.8;
+  }
+
+  .epigraph-source {
+    font-family: var(--heading);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent-hi);
+  }
+
+  .footer-rule {
+    height: 1px;
+    background: var(--border);
+  }
+
   .footer-inner {
     display: flex;
     align-items: center;
@@ -38,13 +82,6 @@ const year = new Date().getFullYear();
     display: flex;
     align-items: center;
     gap: 10px;
-  }
-
-  .sigil {
-    font-size: 1rem;
-    color: var(--accent);
-    opacity: 0.7;
-    line-height: 1;
   }
 
   .copy {
