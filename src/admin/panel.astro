@@ -1,0 +1,443 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import fs from "node:fs/promises";
+import path from "node:path";
+import type { Project } from "../data/projects";
+
+export const prerender = false;
+
+// Read straight from disk on every request so the lists always reflect
+// what the API endpoints just wrote.
+const projects: Project[] = JSON.parse(
+  await fs.readFile(path.resolve(process.cwd(), "src/data/projects.json"), "utf-8")
+);
+
+import { SEED_SLUG } from "./api/posts";
+
+const blogDir = path.resolve(process.cwd(), "src/content/blog");
+const files = (await fs.readdir(blogDir)).filter(
+  f => (f.endsWith(".md") || f.endsWith(".mdx")) && !f.startsWith(SEED_SLUG)
+);
+
+const posts = await Promise.all(
+  files.map(async file => {
+    const raw = await fs.readFile(path.join(blogDir, file), "utf-8");
+    const fm = raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
+    const get = (key: string) =>
+      fm.match(new RegExp(`^${key}:\\s*(.+)$`, "m"))?.[1].replace(/^["']|["']$/g, "") ?? "";
+    return {
+      slug: file.replace(/\.(md|mdx)$/, ""),
+      title: get("title") || file,
+      date: get("date"),
+      draft: get("draft") === "true",
+    };
+  })
+);
+posts.sort((a, b) => b.date.localeCompare(a.date));
+
+const today = new Date().toISOString().slice(0, 10);
+---
+
+<BaseLayout title="Scriptorium — Admin" description="Local content admin. Never deployed.">
+  <section class="page-header">
+    <span class="eyebrow">Local Only — Never Deployed</span>
+    <h1>Scriptorium</h1>
+    <p>Forge projects and chronicle posts. Everything written here lands in the repo — commit and push to publish.</p>
+  </section>
+
+  <!-- ── PROJECTS ─────────────────────────────── -->
+  <section class="admin-section">
+    <div class="section-head">
+      <span class="section-label">Projects</span>
+      <span class="head-rule"></span>
+      <span class="count">{projects.length} forged</span>
+    </div>
+
+    {projects.length > 0 && (
+      <ul class="item-list">
+        {projects.map((p, i) => (
+          <li>
+            <div class="item-info">
+              <span class="item-title">{p.title}</span>
+              <span class="item-meta">{p.status}{p.featured ? " · featured" : ""} · {p.stack.join(", ")}</span>
+            </div>
+            <button class="del" data-kind="project" data-id={String(i)} data-name={p.title}>Strike</button>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <form id="project-form" class="panel-form">
+      <div class="form-cap"></div>
+      <div class="form-body">
+        <div class="row two">
+          <label>Title <input name="title" required /></label>
+          <label>Subtitle <input name="subtitle" required /></label>
+        </div>
+        <label>Description <textarea name="description" rows="3" required></textarea></label>
+        <div class="row two">
+          <label>Stack <small>comma-separated</small> <input name="stack" placeholder="Python, PyTorch, FastAPI" /></label>
+          <label>Link <small>optional</small> <input name="href" type="url" placeholder="https://…" /></label>
+        </div>
+        <div class="row two">
+          <label>Status
+            <select name="status">
+              <option>Built</option>
+              <option>In Progress</option>
+              <option>Research</option>
+            </select>
+          </label>
+          <label class="check"><input type="checkbox" name="featured" /> Featured on home page</label>
+        </div>
+        <button type="submit">Forge Project</button>
+        <p class="form-msg" data-for="project"></p>
+      </div>
+    </form>
+  </section>
+
+  <!-- ── POSTS ────────────────────────────────── -->
+  <section class="admin-section">
+    <div class="section-head">
+      <span class="section-label">Posts</span>
+      <span class="head-rule"></span>
+      <span class="count">{posts.length} chronicled</span>
+    </div>
+
+    {posts.length > 0 && (
+      <ul class="item-list">
+        {posts.map(p => (
+          <li>
+            <div class="item-info">
+              <span class="item-title">{p.title}{p.draft && <em class="draft-tag"> draft</em>}</span>
+              <span class="item-meta">{p.date} · /blog/{p.slug}</span>
+            </div>
+            <button class="del" data-kind="post" data-id={p.slug} data-name={p.title}>Strike</button>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <form id="post-form" class="panel-form">
+      <div class="form-cap"></div>
+      <div class="form-body">
+        <div class="row two">
+          <label>Title <input name="title" required /></label>
+          <label>Date <input name="date" type="date" value={today} required /></label>
+        </div>
+        <label>Description <input name="description" required /></label>
+        <div class="row two">
+          <label>Tags <small>comma-separated, optional</small> <input name="tags" placeholder="AI, RAG" /></label>
+          <label class="check"><input type="checkbox" name="draft" /> Draft (hidden from site)</label>
+        </div>
+        <label>Content <small>Markdown</small> <textarea name="content" rows="12"></textarea></label>
+        <button type="submit">Chronicle Post</button>
+        <p class="form-msg" data-for="post"></p>
+      </div>
+    </form>
+  </section>
+</BaseLayout>
+
+<script>
+  const split = (v: string) => v.split(",").map(s => s.trim()).filter(Boolean);
+
+  async function send(url: string, init: RequestInit, msgEl: HTMLElement) {
+    msgEl.textContent = "…";
+    const res = await fetch(url, init).catch(() => null);
+    const data = res ? await res.json().catch(() => ({})) : {};
+    if (res?.ok) {
+      location.reload();
+    } else {
+      msgEl.textContent = data.error ?? "Request failed.";
+    }
+  }
+
+  const projectForm = document.getElementById("project-form") as HTMLFormElement;
+  projectForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const f = new FormData(projectForm);
+    send("/admin/api/projects", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: f.get("title"),
+        subtitle: f.get("subtitle"),
+        description: f.get("description"),
+        stack: split(String(f.get("stack") ?? "")),
+        status: f.get("status"),
+        href: f.get("href"),
+        featured: f.get("featured") === "on",
+      }),
+    }, document.querySelector('[data-for="project"]')!);
+  });
+
+  const postForm = document.getElementById("post-form") as HTMLFormElement;
+  postForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const f = new FormData(postForm);
+    send("/admin/api/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: f.get("title"),
+        description: f.get("description"),
+        date: f.get("date"),
+        tags: split(String(f.get("tags") ?? "")),
+        draft: f.get("draft") === "on",
+        content: f.get("content"),
+      }),
+    }, document.querySelector('[data-for="post"]')!);
+  });
+
+  document.querySelectorAll<HTMLButtonElement>(".del").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (!confirm(`Strike "${btn.dataset.name}" from the record?`)) return;
+      const url = btn.dataset.kind === "project"
+        ? `/admin/api/projects?index=${btn.dataset.id}`
+        : `/admin/api/posts?slug=${btn.dataset.id}`;
+      const msg = btn.closest(".admin-section")!.querySelector<HTMLElement>(".form-msg")!;
+      send(url, { method: "DELETE" }, msg);
+    });
+  });
+</script>
+
+<style>
+  .page-header {
+    padding: 72px 0 52px;
+    border-bottom: 3px solid var(--ink);
+  }
+
+  .eyebrow {
+    font-family: var(--heading);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: var(--heading);
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .page-header p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.75;
+  }
+
+  .admin-section {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .section-label {
+    font-family: var(--heading);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .head-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .count {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  /* ── Existing items ───────────── */
+  .item-list {
+    list-style: none;
+    margin: 0 0 32px;
+    padding: 0;
+  }
+
+  .item-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .item-list li:first-child { border-top: 1px solid var(--border); }
+
+  .item-title {
+    font-family: var(--heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    display: block;
+  }
+
+  .draft-tag {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent-hi);
+    font-style: normal;
+  }
+
+  .item-meta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .del {
+    font-family: var(--heading);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: color 150ms, border-color 150ms;
+    flex-shrink: 0;
+  }
+
+  .del:hover {
+    color: var(--accent-hi);
+    border-color: var(--accent);
+  }
+
+  /* ── Forms ────────────────────── */
+  .panel-form {
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 0 var(--ink);
+  }
+
+  .form-cap {
+    height: 24px;
+    background-color: var(--ink);
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 5px 5px;
+  }
+
+  .form-body {
+    background: var(--surface);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .row.two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  label {
+    font-family: var(--heading);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  label small {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: var(--muted);
+    margin-top: -6px;
+  }
+
+  input, textarea, select {
+    font-family: var(--body);
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    width: 100%;
+  }
+
+  textarea { resize: vertical; line-height: 1.6; }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  label.check {
+    flex-direction: row;
+    align-items: center;
+    align-self: end;
+    padding-bottom: 12px;
+    cursor: pointer;
+  }
+
+  label.check input {
+    width: auto;
+    accent-color: var(--accent);
+  }
+
+  button[type="submit"] {
+    font-family: var(--heading);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 0 var(--ink);
+    padding: 13px 26px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: color 150ms, background 150ms, transform 100ms, box-shadow 100ms;
+  }
+
+  button[type="submit"]:hover {
+    color: #fff;
+    background: var(--accent);
+  }
+
+  button[type="submit"]:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 0 var(--ink);
+  }
+
+  .form-msg {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent-hi);
+    min-height: 1em;
+  }
+
+  @media (max-width: 620px) {
+    .row.two { grid-template-columns: 1fr; }
+    .admin-section { padding: 40px 0; }
+  }
+</style>

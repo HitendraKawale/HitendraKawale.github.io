@@ -63,10 +63,15 @@ Google Fonts (`Cinzel` + `Crimson Text`) are loaded via `<link>` in `BaseLayout.
 
 ## Content — how to update things
 
-### Add a project
-Edit `src/data/projects.ts` — append to the `projects` array. Set `featured: true` to show it on the home page (keep to ≤3). Status must be `"Built" | "Research" | "In Progress"`. `href` is optional.
+### Local admin panel (preferred)
+Run `npm run dev` and open `http://localhost:4321/admin`. The "Scriptorium" panel adds/deletes projects and blog posts by writing the repo files directly — commit and push afterwards to publish. The panel is **dev-only**: its routes are injected by the inline `localAdmin` integration in `astro.config.mjs` only when `command === 'dev'`, so the production build contains no trace of it. Code lives in `src/admin/` (`panel.astro` + `api/projects.ts` + `api/posts.ts`), deliberately outside `src/pages/` so it never auto-routes.
 
-### Add a blog post
+`src/content/blog/scriptorium-seed.md` is a permanent `draft: true` post that must not be deleted: if the blog collection is empty when `astro dev` starts, the glob loader never registers its file watcher and newly added posts don't appear until a restart. The admin API refuses to delete it and the panel hides it; drafts never render publicly.
+
+### Add a project (manually)
+Edit `src/data/projects.json` — append to the array (`src/data/projects.ts` just re-exports it with types; the admin API writes this JSON). Set `featured: true` to show it on the home page (keep to ≤3). Status must be `"Built" | "Research" | "In Progress"`. `href` is optional.
+
+### Add a blog post (manually)
 Create a Markdown file in `src/content/blog/your-slug.md`. Required frontmatter:
 
 ```md
