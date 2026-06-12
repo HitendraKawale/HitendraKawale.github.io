@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "title": "Mini OpenAI Platform",
+    "subtitle": "Self-hosted LLM platform with OpenAI-compatible APIs",
+    "description": "Microservices LLM platform — API gateway, RAG, embedding, and inference services — with an embedding-based semantic cache cutting latency ~80× on cache hits, a difficulty-based router dispatching prompts across Ollama model tiers, a CI quality gate on retrieval metrics (recall@k, MRR), and 16 Prometheus/Grafana panels covering latency, token economics, and answer quality.",
+    "stack": ["Python", "FastAPI", "React", "Qdrant", "Ollama", "Docker Compose", "Prometheus", "Grafana"],
+    "status": "Built",
+    "featured": true
+  },
+  {
+    "title": "Chat2Study",
+    "subtitle": "Turn AI chat transcripts into a searchable knowledge base",
+    "description": "Full-stack RAG app converting long AI chat transcripts into knowledge bases, study notes, and concept maps. A 10-node LangGraph pipeline orchestrates Playwright capture, artifact persistence, chunking, and embedding; async job re-architecture took ingestion API responses from 30–90s to ~10ms, with pgvector retrieval at ~50ms, a provider-agnostic LLM factory, JWT auth, and full CI.",
+    "stack": ["Next.js", "TypeScript", "FastAPI", "LangGraph", "PostgreSQL", "pgvector", "MinIO", "Docker"],
+    "status": "Built",
+    "href": "https://github.com/HitendraKawale/chat2study",
+    "featured": true
+  },
+  {
+    "title": "RAG Chunk Visualizer",
+    "subtitle": "See inside the retrieval pipeline",
+    "description": "Interactive debugging tool that makes every RAG stage inspectable — chunking, embeddings, 2D embedding maps (PCA/UMAP), vector search, and grounded prompt construction — across 5 LLM providers behind one abstraction. Local-first embeddings so documents never leave the machine; 59 unit tests; deployed on Hugging Face Spaces.",
+    "stack": ["Python", "Streamlit", "LanceDB", "sentence-transformers", "Docker"],
+    "status": "Built",
+    "href": "https://huggingface.co/spaces/HitendraKawale/rag-chunk-visualizer",
+    "featured": true
+  },
+  {
+    "title": "Scribble-Guided 3D Scene Segmentation",
+    "subtitle": "MSc dissertation — interactive segmentation for Gaussian Splatting",
+    "description": "Extended the SAGA (Segment Any 3D Gaussians) pipeline with scribble-based prompting and Context-Aware Filtering — kNN graphs and radius-based connectivity to suppress floaters — plus iterative add/remove/overwrite refinement at ~1s scribble latency. Evaluated on 360V2 and NeRF-LLFF: 1–2% precision gain over the SAGA baseline with notably fewer floater artifacts.",
+    "stack": ["Python", "PyTorch", "CUDA", "OpenCV", "3D Gaussian Splatting"],
+    "status": "Research"
+  }
+]

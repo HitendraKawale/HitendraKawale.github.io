@@ -2,39 +2,41 @@ export const profile = {
   name: "Hitendra Kawale",
   initials: "HK",
   title: "AI Engineer",
-  bio: "I build production-grade AI systems — RAG pipelines, LLM evaluation platforms, and applied computer vision — backend-heavy, deployment-aware, and obsessed with what holds up in the real world. I'm also a polyglot: I work comfortably in English and Spanish, hold a conversation in Mandarin, carry Hindi and Marathi as mother tongues, and read or speak a half-dozen more. Global teams and international users feel like home.",
+  bio: "MSc Artificial Intelligence (University of Surrey). I build production-grade AI systems — LLM platforms, RAG pipelines, and interactive 3D vision — backend-heavy, deployment-aware, and obsessed with what holds up in the real world. I'm also a polyglot: I work comfortably in English and Spanish, hold a conversation in Mandarin, carry Hindi and Marathi as mother tongues, and read or speak a half-dozen more. Global teams and international users feel like home.",
   availability: "Open to AI engineering roles",
 
   // Links
   github: "https://github.com/HitendraKawale",
-  linkedin: "",       // e.g. "https://linkedin.com/in/yourhandle"
+  linkedin: "https://linkedin.com/in/hitendra-kawale",
   email: "hituhitesh303@gmail.com",
   resume: "/resume.pdf",  // served from public/resume.pdf — replace that file, keep the name
 
-  // Tech skills — edit freely
+  // Tech skills — mirrors the resume (HKUK.tex)
   skills: [
     // Core ML/LLM
     "Python",
     "PyTorch",
     "Hugging Face",
-    "LangChain",
     "LangGraph",
-    "vLLM",
+    "RAG",
+    "3D Gaussian Splatting",
     "Ollama",
     // Serving & data
     "FastAPI",
     "PostgreSQL",
     "pgvector",
     "Qdrant",
+    "LanceDB",
     "Redis",
+    "SQL",
     // Infra & ops
     "Docker",
-    "Kubernetes",
     "AWS",
     "GitHub Actions",
     "Prometheus",
-    "MLflow",
+    "Grafana",
     // Edge
+    "Next.js",
     "TypeScript",
   ],
 
