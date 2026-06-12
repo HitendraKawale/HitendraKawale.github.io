@@ -5,6 +5,7 @@
     "description": "Microservices LLM platform — API gateway, RAG, embedding, and inference services — with an embedding-based semantic cache cutting latency ~80× on cache hits, a difficulty-based router dispatching prompts across Ollama model tiers, a CI quality gate on retrieval metrics (recall@k, MRR), and 16 Prometheus/Grafana panels covering latency, token economics, and answer quality.",
     "stack": ["Python", "FastAPI", "React", "Qdrant", "Ollama", "Docker Compose", "Prometheus", "Grafana"],
     "status": "Built",
+    "href": "https://github.com/HitendraKawale/mini-openai-platform",
     "featured": true
   },
   {
