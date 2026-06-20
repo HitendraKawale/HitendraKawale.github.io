@@ -1,5 +1,14 @@
 [
   {
+    "title": "Log Guardian",
+    "subtitle": "AI-powered log anomaly-detection platform",
+    "description": "Microservice platform that ingests application logs and scores each one for anomalies with a Random Forest model (ROC-AUC 0.89), a versioned model registry, and a human-feedback retraining loop with score-drift detection. Synchronous REST and Kafka-backed streaming share one scoring pipeline, with OpenTelemetry traces (through Kafka), Prometheus/Alertmanager, and Grafana dashboards. 49 tests, CI, k6 load-tested at ~220 req/s (p95 ~24ms), shipping via Docker Compose and Kubernetes.",
+    "stack": ["Python", "FastAPI", "Kafka", "PostgreSQL", "OpenTelemetry", "Prometheus", "Grafana", "Kubernetes"],
+    "status": "Built",
+    "href": "https://github.com/HitendraKawale/log-guardian",
+    "featured": true
+  },
+  {
     "title": "Mini OpenAI Platform",
     "subtitle": "Self-hosted LLM platform with OpenAI-compatible APIs",
     "description": "Microservices LLM platform — API gateway, RAG, embedding, and inference services — with an embedding-based semantic cache cutting latency ~80× on cache hits, a difficulty-based router dispatching prompts across Ollama model tiers, a CI quality gate on retrieval metrics (recall@k, MRR), and 16 Prometheus/Grafana panels covering latency, token economics, and answer quality.",
@@ -23,8 +32,31 @@
     "description": "Interactive debugging tool that makes every RAG stage inspectable — chunking, embeddings, 2D embedding maps (PCA/UMAP), vector search, and grounded prompt construction — across 5 LLM providers behind one abstraction. Local-first embeddings so documents never leave the machine; 59 unit tests; deployed on Hugging Face Spaces.",
     "stack": ["Python", "Streamlit", "LanceDB", "sentence-transformers", "Docker"],
     "status": "Built",
-    "href": "https://huggingface.co/spaces/HitendraKawale/rag-chunk-visualizer",
-    "featured": true
+    "href": "https://huggingface.co/spaces/HitendraKawale/rag-chunk-visualizer"
+  },
+  {
+    "title": "War Room",
+    "subtitle": "Deterministic multi-agent launch-decision system",
+    "description": "Simulates a cross-functional product-launch war room: specialist agents (PM, data analyst, comms, risk/critic) reason over a launch dashboard via deterministic analysis tools — metric health scoring, threshold guardrails, sentiment and theme detection — and a coordinator resolves a structured PROCEED / PAUSE / ROLL_BACK decision with rationale, risk register, action plan, confidence score, and full execution traces. Deterministic by design, so every decision is grounded in explicit tool outputs and testable.",
+    "stack": ["Python", "Multi-Agent", "Pytest"],
+    "status": "Built",
+    "href": "https://github.com/HitendraKawale/war-room"
+  },
+  {
+    "title": "Bug Investigator",
+    "subtitle": "LangGraph multi-agent bug-investigation pipeline",
+    "description": "A LangGraph multi-agent system that reads a bug report, logs, and a repo snapshot, then reproduces the issue with a generated script, proposes a root-cause hypothesis, and outputs a patch plan with validation steps. Seven specialist agents (triage, log analyst, reproduction, fix planner, reviewer/critic, repo context, coordinator) run behind a Typer CLI over an Ollama or OpenAI-compatible backend.",
+    "stack": ["Python", "LangGraph", "Typer", "Ollama", "Streamlit"],
+    "status": "Built",
+    "href": "https://github.com/HitendraKawale/bug-investigator"
+  },
+  {
+    "title": "Vision Transformers for Scene Recognition",
+    "subtitle": "Config-driven fine-tuning & benchmarking of image backbones",
+    "description": "A single config-driven pipeline that fine-tunes and benchmarks ViT, DINOv2, Swin, and ConvNeXt against a ResNet-50 baseline on a 40-class Places2 subset — every experiment specified by a YAML file and seeded for reproducibility. Includes attention-map explainability, confusion matrices, and automatic CUDA/MPS/CPU device selection. Self-supervised DINOv2 features gave the strongest scene-recognition performance.",
+    "stack": ["Python", "PyTorch", "Hugging Face", "Vision Transformers", "DINOv2"],
+    "status": "Research",
+    "href": "https://github.com/HitendraKawale/ViT_for_scene_recognition"
   },
   {
     "title": "Scribble-Guided 3D Scene Segmentation",
