@@ -88,6 +88,11 @@ const tongues = [
           <a href={profile.github} target="_blank" rel="noreferrer" class="way">
             GitHub <span aria-hidden="true">↗</span>
           </a>
+          {profile.codeberg && (
+            <a href={profile.codeberg} target="_blank" rel="noreferrer" class="way">
+              Codeberg <span aria-hidden="true">↗</span>
+            </a>
+          )}
           {profile.linkedin && (
             <a href={profile.linkedin} target="_blank" rel="noreferrer" class="way">
               LinkedIn <span aria-hidden="true">↗</span>

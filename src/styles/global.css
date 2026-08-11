@@ -39,7 +39,7 @@
   --han:     'Noto Serif SC', 'STSong', 'SimSun', serif;
 
   /* Fluid scale */
-  --t-hero:  clamp(3rem, 12vw, 9.7rem);
+  --t-hero:  clamp(2.7rem, 10.2vw, 8.4rem);
   --t-xxl:   clamp(2.4rem, 7.5vw, 5.6rem);
   --t-xl:    clamp(1.9rem, 4.6vw, 3.4rem);
   --t-lg:    clamp(1.35rem, 2.6vw, 2rem);
@@ -89,8 +89,8 @@
   --green:     #d1743a;
 
   --veil-opacity: 1;
-  --hatch-opacity: 0.16;
-  --grain: 0.085;
+  --hatch-opacity: 0.15;
+  --grain: 0.08;
 }
 
 /* ============================================================
@@ -106,9 +106,17 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  scroll-behavior: smooth;
   transition: background-color 700ms var(--ease), color 700ms var(--ease);
 }
+
+/* Lenis drives the scroll instead — native smooth behaviour fights it.
+   When Lenis is off (reduced motion, or before it boots), the browser
+   falls back to its own smooth scrolling for anchor jumps. */
+html:not(.lenis) { scroll-behavior: smooth; }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
 
 body {
   min-height: 100vh;
@@ -167,9 +175,9 @@ body::after {
   transition: opacity 1400ms var(--ease), visibility 0s linear 1400ms;
   background: radial-gradient(circle at 42% 40%, #2a0f0c 0%, #140605 44%, #000 72%);
   box-shadow:
-    0 0 0 2px rgba(255, 82, 51, 0.55),
-    0 0 40px 6px rgba(255, 82, 51, 0.3),
-    0 0 180px 60px rgba(213, 29, 32, 0.3);
+    0 0 0 2px rgba(255, 82, 51, 0.5),
+    0 0 40px 6px rgba(255, 82, 51, 0.25),
+    0 0 180px 60px rgba(213, 29, 32, 0.25);
 }
 
 :root[data-eclipse] .sky {
@@ -194,9 +202,9 @@ body::before {
   opacity: var(--veil-opacity);
   transition: opacity 900ms var(--ease);
   background:
-    radial-gradient(ellipse 95% 60% at 50% -6%, rgba(220, 38, 26, 0.42), transparent 70%),
-    radial-gradient(ellipse 75% 55% at 50% 108%, rgba(140, 14, 18, 0.38), transparent 72%),
-    radial-gradient(ellipse at 50% 50%, transparent 26%, rgba(0, 0, 0, 0.82) 100%);
+    radial-gradient(ellipse 95% 60% at 50% -6%, rgba(220, 38, 26, 0.37), transparent 70%),
+    radial-gradient(ellipse 75% 55% at 50% 108%, rgba(140, 14, 18, 0.34), transparent 72%),
+    radial-gradient(ellipse at 50% 50%, transparent 27%, rgba(0, 0, 0, 0.8) 100%);
 }
 
 /* Cross-hatch — engraver's texture for panels */

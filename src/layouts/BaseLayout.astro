@@ -131,8 +131,45 @@ const { title, description } = Astro.props;
     <script>
       // ── THE CHRONICLE — site script ────────────────────────────────
       // One init(), re-run on every navigation.
+      import Lenis from "lenis";
 
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ── Smooth scroll ──────────────────────────────────────────────
+         Lenis eases the wheel; touch is left native so phones keep the
+         momentum their OS gives them. Off entirely for reduced motion. */
+      function initScroll() {
+        if (reduced) return;
+
+        const lenis = new Lenis({
+          lerp: 0.085,
+          wheelMultiplier: 1,
+          smoothWheel: true,
+          syncTouch: false,
+        });
+
+        let frame = 0;
+        const raf = (time: number) => {
+          lenis.raf(time);
+          frame = requestAnimationFrame(raf);
+        };
+        frame = requestAnimationFrame(raf);
+
+        // Pause the loop while the tab is hidden
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            cancelAnimationFrame(frame);
+          } else {
+            frame = requestAnimationFrame(raf);
+          }
+        });
+
+        // The full-screen menu locks the page; Lenis must stop with it
+        document.addEventListener("chronicle:scroll-lock", (e: Event) => {
+          const detail = (e as CustomEvent<{ locked: boolean }>).detail;
+          detail?.locked ? lenis.stop() : lenis.start();
+        });
+      }
 
       /* ── Scroll reveals ─────────────────────────────────────────── */
       function initReveals() {
@@ -222,10 +259,14 @@ const { title, description } = Astro.props;
         const menu = document.getElementById("menu");
         if (!burger || !menu) return;
 
+        const lock = (locked: boolean) =>
+          document.dispatchEvent(new CustomEvent("chronicle:scroll-lock", { detail: { locked } }));
+
         const close = () => {
           burger.setAttribute("aria-expanded", "false");
           menu.classList.remove("open");
           document.body.style.overflow = "";
+          lock(false);
           window.setTimeout(() => { menu.hidden = true; }, 320);
         };
 
@@ -237,6 +278,7 @@ const { title, description } = Astro.props;
           menu.classList.add("open");
           burger.setAttribute("aria-expanded", "true");
           document.body.style.overflow = "hidden";
+          lock(true);
         });
 
         menu.querySelectorAll("a").forEach(a => a.addEventListener("click", close));
@@ -437,6 +479,7 @@ const { title, description } = Astro.props;
       }
 
       function init() {
+        initScroll();
         initReveals();
         initProgress();
         initBehelit();
