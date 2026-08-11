@@ -59,36 +59,38 @@
   /* Eclipse-only knobs, inert by default */
   --veil-opacity: 0;
   --hatch-opacity: 0.05;
+  --grain: 0.045;
 }
 
 /* ── THE ECLIPSE ──────────────────────────────
    Sacrifice made. The sun turns black, the ink
    floods crimson, the gold catches fire.        */
 :root[data-eclipse] {
-  --void:      #100507;
+  --void:      #170406;
   --pitch:     #000000;
-  --soot:      #190709;
-  --soot-2:    #24090c;
+  --soot:      #240709;
+  --soot-2:    #320b0e;
 
-  --bone:      #f4ded2;
-  --ash:       #a37b71;
-  --ash-dim:   #74504a;
-  --line:      #3d1215;
+  --bone:      #fbe0d2;
+  --ash:       #bd8578;
+  --ash-dim:   #8c574d;
+  --line:      #56171b;
 
-  --blood:     #c2181c;
-  --blood-hi:  #ff4b2e;
+  --blood:     #d51d20;
+  --blood-hi:  #ff5233;
 
-  --brass:     #e6c369;
-  --brass-dim: #9a7a2e;
+  --brass:     #f5cf6d;
+  --brass-dim: #a8822f;
 
-  --paper:     #d9c4ad;
-  --paper-2:   #c6ac93;
-  --paper-ink: #1a0a08;
+  --paper:     #c9a98d;
+  --paper-2:   #b08d70;
+  --paper-ink: #240805;
 
-  --green:     #b8703f;
+  --green:     #d1743a;
 
   --veil-opacity: 1;
-  --hatch-opacity: 0.1;
+  --hatch-opacity: 0.16;
+  --grain: 0.085;
 }
 
 /* ============================================================
@@ -144,8 +146,42 @@ body::after {
   inset: 0;
   pointer-events: none;
   z-index: 9998;
-  opacity: 0.045;
+  opacity: var(--grain);
+  transition: opacity 900ms var(--ease);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* The black sun itself, hanging over every page once the Eclipse has begun */
+.sky {
+  position: fixed;
+  top: -34vmax;
+  left: 50%;
+  width: 84vmax;
+  height: 84vmax;
+  margin-left: -42vmax;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1400ms var(--ease), visibility 0s linear 1400ms;
+  background: radial-gradient(circle at 42% 40%, #2a0f0c 0%, #140605 44%, #000 72%);
+  box-shadow:
+    0 0 0 2px rgba(255, 82, 51, 0.55),
+    0 0 40px 6px rgba(255, 82, 51, 0.3),
+    0 0 180px 60px rgba(213, 29, 32, 0.3);
+}
+
+:root[data-eclipse] .sky {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1400ms var(--ease) 300ms, visibility 0s;
+  animation: skyThrob 9s ease-in-out infinite;
+}
+
+@keyframes skyThrob {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.015); }
 }
 
 /* The veil — the sky bleeding, only present in the Eclipse */
@@ -158,9 +194,9 @@ body::before {
   opacity: var(--veil-opacity);
   transition: opacity 900ms var(--ease);
   background:
-    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(207, 34, 24, 0.34), transparent 68%),
-    radial-gradient(ellipse 70% 50% at 50% 108%, rgba(120, 12, 16, 0.3), transparent 70%),
-    radial-gradient(ellipse at 50% 50%, transparent 32%, rgba(0, 0, 0, 0.78) 100%);
+    radial-gradient(ellipse 95% 60% at 50% -6%, rgba(220, 38, 26, 0.42), transparent 70%),
+    radial-gradient(ellipse 75% 55% at 50% 108%, rgba(140, 14, 18, 0.38), transparent 72%),
+    radial-gradient(ellipse at 50% 50%, transparent 26%, rgba(0, 0, 0, 0.82) 100%);
 }
 
 /* Cross-hatch — engraver's texture for panels */
