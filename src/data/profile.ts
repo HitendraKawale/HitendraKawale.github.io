@@ -3,7 +3,7 @@ export const profile = {
   initials: "HK",
   title: "AI Engineer",
   bio: "MSc Artificial Intelligence (University of Surrey). I build production-grade AI systems — LLM platforms, RAG pipelines, and interactive 3D vision — backend-heavy, deployment-aware, and obsessed with what holds up in the real world. I'm also a polyglot: I work comfortably in English and Spanish, hold a conversation in Mandarin, carry Hindi and Marathi as mother tongues, and read or speak a half-dozen more. Global teams and international users feel like home.",
-  availability: "Open to AI engineering roles",
+  availability: "Open to AI roles and freelance work",
 
   // Links
   github: "https://github.com/HitendraKawale",
