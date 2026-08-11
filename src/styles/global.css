@@ -39,7 +39,7 @@
   --han:     'Noto Serif SC', 'STSong', 'SimSun', serif;
 
   /* Fluid scale */
-  --t-hero:  clamp(3.2rem, 13vw, 10.5rem);
+  --t-hero:  clamp(3rem, 12vw, 9.7rem);
   --t-xxl:   clamp(2.4rem, 7.5vw, 5.6rem);
   --t-xl:    clamp(1.9rem, 4.6vw, 3.4rem);
   --t-lg:    clamp(1.35rem, 2.6vw, 2rem);
