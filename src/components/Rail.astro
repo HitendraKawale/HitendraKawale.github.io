@@ -6,6 +6,10 @@ import Brand from "./Brand.astro";
 
 const { pathname } = Astro.url;
 
+// The homepage hides its browser scrollbar, so the spine carries the
+// progress line instead. Inner pages keep their native bar and stay bare.
+const isHome = pathname === "/";
+
 const running =
   pathname.startsWith("/projects") ? "The Armoury" :
   pathname.startsWith("/blog")     ? "The Chronicles" :
@@ -19,6 +23,12 @@ const running =
   </a>
 
   <span class="rail-running">{running}</span>
+
+  {isHome && (
+    <div class="rail-track">
+      <span class="rail-fill" id="rail-fill"></span>
+    </div>
+  )}
 
   <span class="rail-foot">HK</span>
 </aside>
@@ -62,6 +72,24 @@ const running =
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     white-space: nowrap;
+  }
+
+  .rail-track {
+    position: absolute;
+    right: -1px;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .rail-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, var(--brass), var(--blood) 45%, var(--blood-hi));
+    transform: scaleY(var(--p, 0));
+    transform-origin: top center;
   }
 
   .rail-foot {

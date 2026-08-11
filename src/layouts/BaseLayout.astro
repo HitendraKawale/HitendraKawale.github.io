@@ -199,6 +199,32 @@ const isHome = Astro.url.pathname === "/";
         targets.forEach(t => io.observe(t));
       }
 
+      /* ── Spine progress ─────────────────────────────────────────────
+         Only rendered on the homepage, where the browser's own bar is
+         hidden. Reads window.scrollY, which Lenis keeps truthful. */
+      function initProgress() {
+        const fill = document.getElementById("rail-fill");
+        if (!fill) return;
+
+        let ticking = false;
+        const update = () => {
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+          fill.style.setProperty("--p", String(p));
+          ticking = false;
+        };
+
+        const onScroll = () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(update);
+        };
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll, { passive: true });
+        update();
+      }
+
       /* ── The Behelit ────────────────────────────────────────────── */
       function initBehelit() {
         const btn = document.getElementById("behelit");
@@ -461,6 +487,7 @@ const isHome = Astro.url.pathname === "/";
       function init() {
         initScroll();
         initReveals();
+        initProgress();
         initBehelit();
         initMenu();
         initHero();
