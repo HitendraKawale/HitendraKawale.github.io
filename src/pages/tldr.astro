@@ -1,0 +1,247 @@
+---
+// TL;DR — the whole site in one screen.
+// Deliberately does NOT use BaseLayout: no nav, no spine, no ash, no
+// eclipse. One column, hairlines, a single blood accent. The saved
+// Eclipse choice still applies, because the tokens are shared.
+import "../styles/global.css";
+import Brand from "../components/Brand.astro";
+import { profile } from "../data/profile";
+import { projects } from "../data/projects";
+
+const featured = projects.filter(p => p.featured);
+
+const facts = [
+  ["Role",    "AI Engineer — audio & NLP, LLM platforms, RAG, 3D vision"],
+  ["Study",   "MSc Artificial Intelligence, University of Surrey"],
+  ["Based",   "United Kingdom"],
+  ["Status",  "Open to roles and freelance"],
+  ["Tongues", "English, Español, 中文, हिंदी, मराठी +3"],
+];
+
+const links = [
+  ["Email",    profile.email,                                    `mailto:${profile.email}`],
+  ["GitHub",   "github.com/HitendraKawale",                      profile.github],
+  ["Codeberg", "codeberg.org/HitendraKawale",                    profile.codeberg],
+  ["LinkedIn", "linkedin.com/in/hitendra-kawale",                profile.linkedin],
+  ["Resume",   "resume.pdf",                                     profile.resume],
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Hitendra Kawale in one screen — AI engineer, audio & NLP, LLM platforms, RAG pipelines." />
+    <title>TL;DR — Hitendra Kawale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,700..900&family=Spectral:wght@300;400&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script is:inline>
+      try {
+        if (localStorage.getItem("eclipse") === "1")
+          document.documentElement.setAttribute("data-eclipse", "");
+      } catch (e) {}
+    </script>
+  </head>
+
+  <body class="tldr">
+    <main>
+      <header>
+        <span class="sigil"><Brand size={16} /></span>
+        <h1>Hitendra Kawale</h1>
+        <p class="one-line">
+          I build production-grade AI systems. Backend-heavy, deployment-aware,
+          and measured rather than estimated.
+        </p>
+      </header>
+
+      <dl class="facts">
+        {facts.map(([k, v]) => (
+          <div>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <section>
+        <h2>Work</h2>
+        <ul class="work">
+          {featured.map(p => (
+            <li>
+              <a href={p.href} target="_blank" rel="noreferrer">{p.title}</a>
+              <span class="what">{p.subtitle}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Elsewhere</h2>
+        <ul class="links">
+          {links.filter(([, , href]) => href).map(([k, v, href]) => (
+            <li>
+              <span class="k">{k}</span>
+              <a href={href}>{v}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <footer>
+        <a href="/" class="back">The full chronicle →</a>
+      </footer>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Strip the shared shell back to nothing */
+  .tldr {
+    display: block;
+    background: var(--void);
+    padding: clamp(48px, 12vh, 130px) clamp(22px, 6vw, 40px);
+  }
+
+  .tldr::before, .tldr::after { display: none; }
+
+  main {
+    max-width: 46rem;
+    margin-inline: auto;
+    font-family: var(--body);
+    font-weight: 300;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ash);
+  }
+
+  /* ── Header ── */
+  .sigil {
+    display: block;
+    margin-bottom: 18px;
+    opacity: 0.85;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: -0.02em;
+    color: var(--bone);
+    line-height: 1;
+  }
+
+  .one-line {
+    margin-top: 14px;
+    max-width: 38ch;
+  }
+
+  /* ── Facts ── */
+  .facts {
+    margin: 44px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .facts > div {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 16px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  dt {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+    padding-top: 2px;
+  }
+
+  dd { color: var(--bone); }
+
+  /* ── Sections ── */
+  section { margin-bottom: 40px; }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+    margin-bottom: 14px;
+  }
+
+  .work li { margin-bottom: 12px; }
+
+  .work a {
+    color: var(--bone);
+    border-bottom: 1px solid var(--line);
+    transition: color 160ms, border-color 160ms;
+  }
+
+  .work a:hover { color: var(--blood-hi); border-color: var(--blood); }
+
+  .what {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--ash-dim);
+  }
+
+  /* ── Links ── */
+  .links li {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 16px;
+    padding: 5px 0;
+  }
+
+  .k {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+    padding-top: 3px;
+  }
+
+  .links a {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--blood-hi);
+    width: fit-content;
+    border-bottom: 1px solid transparent;
+    transition: border-color 160ms;
+  }
+
+  .links a:hover { border-bottom-color: currentColor; }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  .back {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+    transition: color 160ms;
+  }
+
+  .back:hover { color: var(--brass); }
+
+  @media (max-width: 520px) {
+    .facts > div, .links li { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>
