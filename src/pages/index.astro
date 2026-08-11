@@ -99,6 +99,7 @@ const tongues = [
             </a>
           )}
           <a href="/contact" class="way">Send word <span aria-hidden="true">→</span></a>
+          <a href="/tldr" class="way way-quiet">In a hurry — TL;DR <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </div>
@@ -429,6 +430,15 @@ const tongues = [
   }
 
   .way-lead { color: var(--brass); }
+
+  /* A shortcut, not a peer of the links above it */
+  .way-quiet {
+    color: var(--ash-dim);
+    border-bottom-color: transparent;
+    font-size: var(--t-micro);
+  }
+
+  .way-quiet:hover { color: var(--ash); }
 
   /* ── Descend cue ───────────────────────────── */
   .descend {
