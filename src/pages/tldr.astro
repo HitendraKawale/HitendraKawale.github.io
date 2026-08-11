@@ -60,7 +60,9 @@ const year = new Date().getFullYear();
       <header class="topbar">
         <span>TL;DR</span>
         <span class="topbar-mid">The short version</span>
-        <span>{year}</span>
+        <span class="clock" id="clock" title="My local time">
+          <span class="clock-time">--:--</span> London
+        </span>
       </header>
 
       <div class="grid">
@@ -122,7 +124,12 @@ const year = new Date().getFullYear();
               {links.filter(([, , href]) => href).map(([k, v, href]) => (
                 <li>
                   <span class="k">{k}</span>
-                  <a href={href}>{v}</a>
+                  <span class="v">
+                    <a href={href}>{v}</a>
+                    {k === "Email" && (
+                      <button class="copy" data-copy={profile.email} type="button">copy</button>
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -137,6 +144,42 @@ const year = new Date().getFullYear();
       </footer>
 
     </div>
+
+    <script>
+      /* His local time, so a reader knows whether he's awake */
+      const clock = document.getElementById("clock");
+      if (clock) {
+        const face = clock.querySelector(".clock-time")!;
+        const fmt = new Intl.DateTimeFormat("en-GB", {
+          timeZone: "Europe/London",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+        const tick = () => { face.textContent = fmt.format(new Date()); };
+        tick();
+        setInterval(tick, 15000);
+      }
+
+      /* Copy the address without leaving the page */
+      document.querySelectorAll<HTMLButtonElement>(".copy").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const value = btn.dataset.copy;
+          if (!value) return;
+          try {
+            await navigator.clipboard.writeText(value);
+            btn.textContent = "copied";
+            btn.classList.add("done");
+          } catch {
+            btn.textContent = "press ⌘C";
+          }
+          setTimeout(() => {
+            btn.textContent = "copy";
+            btn.classList.remove("done");
+          }, 1600);
+        });
+      });
+    </script>
   </body>
 </html>
 
@@ -375,6 +418,31 @@ const year = new Date().getFullYear();
 
   .links a:hover { border-bottom-color: currentColor; }
 
+  .v { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+
+  /* Copy button — only announces itself on approach */
+  .copy {
+    font-family: var(--mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+    border: 1px solid var(--line);
+    padding: 2px 7px;
+    opacity: 0;
+    transition: opacity 200ms, color 200ms, border-color 200ms;
+  }
+
+  .links li:hover .copy,
+  .copy:focus-visible { opacity: 1; }
+
+  .copy:hover { color: var(--bone); border-color: var(--ash-dim); }
+  .copy.done { color: var(--green); border-color: var(--green); opacity: 1; }
+
+  /* ── Clock ── */
+  .clock { color: var(--ash-dim); white-space: nowrap; }
+  .clock-time { color: var(--brass); font-variant-numeric: tabular-nums; }
+
   /* ── Foot ── */
   .foot {
     display: flex;
@@ -397,5 +465,42 @@ const year = new Date().getFullYear();
   @media (max-width: 560px) {
     .facts > div, .links li { grid-template-columns: 1fr; gap: 3px; }
     .work a { grid-template-columns: 1.8rem 1fr auto; }
+  }
+
+  /* ── The page settles in once, then stays put ── */
+  .topbar, .ident, .record section, .foot {
+    animation: settle 620ms var(--ease) backwards;
+  }
+
+  .ident           { animation-delay: 60ms; }
+  .record section:nth-of-type(1) { animation-delay: 130ms; }
+  .record section:nth-of-type(2) { animation-delay: 190ms; }
+  .record section:nth-of-type(3) { animation-delay: 250ms; }
+  .foot            { animation-delay: 310ms; }
+
+  @keyframes settle {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .topbar, .ident, .record section, .foot { animation: none; }
+    .dot { animation: none; }
+  }
+
+  /* ── Prints as a clean one-pager ── */
+  @media print {
+    .tldr { background: #fff; padding: 0; }
+    .sheet, .lede, dd, .w-title { color: #000; }
+    .topbar, h2, dt, .k, .w-i, .w-sub, .foot { color: #444; }
+    .ident-inner { position: static; }
+    .grid { padding-block: 18pt; }
+    .copy, .clock, .back, .more, .w-go { display: none; }
+    .links a, .work a { color: #000; }
+    .links a::after { content: ""; }
+    .topbar, .foot, h2, .facts > div, .links li, .work li {
+      border-color: #ccc;
+    }
+    a { text-decoration: none; }
   }
 </style>
