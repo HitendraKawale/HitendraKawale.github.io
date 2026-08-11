@@ -24,6 +24,13 @@ const channels = [
     href: profile.github,
     external: true,
   },
+  ...(profile.codeberg ? [{
+    key: "Codeberg",
+    value: "codeberg.org/" + profile.codeberg.split("/").pop(),
+    note: "Where the code also lives",
+    href: profile.codeberg,
+    external: true,
+  }] : []),
   ...(profile.linkedin ? [{
     key: "LinkedIn",
     value: profile.linkedin.replace(/^https?:\/\/(www\.)?/, ""),

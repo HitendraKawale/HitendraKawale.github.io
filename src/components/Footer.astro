@@ -22,6 +22,9 @@ const year = new Date().getFullYear();
 
       <ul class="foot-links">
         <li><a href={profile.github} target="_blank" rel="noreferrer" class="blade">GitHub</a></li>
+        {profile.codeberg && (
+          <li><a href={profile.codeberg} target="_blank" rel="noreferrer" class="blade">Codeberg</a></li>
+        )}
         {profile.linkedin && (
           <li><a href={profile.linkedin} target="_blank" rel="noreferrer" class="blade">LinkedIn</a></li>
         )}

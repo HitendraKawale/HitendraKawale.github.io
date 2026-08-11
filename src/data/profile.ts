@@ -7,6 +7,7 @@ export const profile = {
 
   // Links
   github: "https://github.com/HitendraKawale",
+  codeberg: "https://codeberg.org/HitendraKawale",
   linkedin: "https://linkedin.com/in/hitendra-kawale",
   email: "hituhitesh303@gmail.com",
   resume: "/resume.pdf",  // served from public/resume.pdf — replace that file, keep the name
