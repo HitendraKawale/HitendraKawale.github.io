@@ -1,67 +1,365 @@
+/* ============================================================
+   THE CHRONICLE — design system
+   A bound volume: engraved type, ink panels, gold leaf, blood.
+   Two states: the Golden Age (default) and the Eclipse.
+   ============================================================ */
+
 :root {
-  --bg:        #0d0b08;
-  --surface:   #141210;
-  --surface-2: #1e1b17;
-  --text:      #e8e0d0;
-  --muted:     #807870;
-  --border:    #2e2820;
-  --accent:    #8b1a1a;
-  --accent-hi: #c0392b;
-  --ink:       #000000;
-  --green:     #22c55e;
-  --heading:   'Cinzel', 'Palatino Linotype', 'Book Antiqua', serif;
-  --body:      'Crimson Text', Georgia, 'Times New Roman', serif;
-  --mono:      ui-monospace, 'SF Mono', 'Fira Code', monospace;
-  --max-width: 1000px;
-  --nav-h:     64px;
+  /* ── Ground ─────────────────────────────── */
+  --void:      #0a0806;   /* page ground — warm near-black */
+  --pitch:     #000000;   /* panel borders, gutters */
+  --soot:      #12100c;   /* panel fill */
+  --soot-2:    #1a1611;   /* elevated fill */
+
+  /* ── Ink ────────────────────────────────── */
+  --bone:      #ece4d4;   /* primary text — aged paper */
+  --ash:       #8a8175;   /* secondary text */
+  --ash-dim:   #5d574e;   /* tertiary / hairline text */
+  --line:      #2a2419;   /* hairlines */
+
+  /* ── Blood ──────────────────────────────── */
+  --blood:     #93171b;
+  --blood-hi:  #cf3520;
+
+  /* ── Gold leaf ──────────────────────────── */
+  --brass:     #c8a24a;
+  --brass-dim: #7d6528;
+
+  /* ── Parchment (the pasted-in page) ─────── */
+  --paper:     #e4dac2;
+  --paper-2:   #d6cbb0;
+  --paper-ink: #14110c;
+
+  --green:     #4ea36a;
+
+  /* ── Type ───────────────────────────────── */
+  --display: 'Bodoni Moda', 'Didot', 'Bodoni MT', 'Playfair Display', serif;
+  --body:    'Spectral', 'Iowan Old Style', Georgia, serif;
+  --mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+  --han:     'Noto Serif SC', 'STSong', 'SimSun', serif;
+
+  /* Fluid scale */
+  --t-hero:  clamp(3.2rem, 13vw, 10.5rem);
+  --t-xxl:   clamp(2.4rem, 7.5vw, 5.6rem);
+  --t-xl:    clamp(1.9rem, 4.6vw, 3.4rem);
+  --t-lg:    clamp(1.35rem, 2.6vw, 2rem);
+  --t-md:    1.0625rem;
+  --t-sm:    0.9375rem;
+  --t-xs:    0.75rem;
+  --t-micro: 0.625rem;
+
+  /* ── Metrics ────────────────────────────── */
+  --nav-h:  68px;
+  --rail-w: 68px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --measure: 1180px;
+
+  --ease: cubic-bezier(0.22, 0.75, 0.2, 1);
+
+  /* Eclipse-only knobs, inert by default */
+  --veil-opacity: 0;
+  --hatch-opacity: 0.05;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ── THE ECLIPSE ──────────────────────────────
+   Sacrifice made. The sun turns black, the ink
+   floods crimson, the gold catches fire.        */
+:root[data-eclipse] {
+  --void:      #100507;
+  --pitch:     #000000;
+  --soot:      #190709;
+  --soot-2:    #24090c;
+
+  --bone:      #f4ded2;
+  --ash:       #a37b71;
+  --ash-dim:   #74504a;
+  --line:      #3d1215;
+
+  --blood:     #c2181c;
+  --blood-hi:  #ff4b2e;
+
+  --brass:     #e6c369;
+  --brass-dim: #9a7a2e;
+
+  --paper:     #d9c4ad;
+  --paper-2:   #c6ac93;
+  --paper-ink: #1a0a08;
+
+  --green:     #b8703f;
+
+  --veil-opacity: 1;
+  --hatch-opacity: 0.1;
 }
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
+  background: var(--void);
+  color: var(--bone);
   font-family: var(--body);
-  background: var(--bg);
-  color: var(--text);
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  transition: background-color 700ms var(--ease), color 700ms var(--ease);
 }
 
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* Paper grain overlay */
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+ul, ol { list-style: none; }
+p { line-height: 1.75; }
+
+::selection { background: var(--blood); color: var(--bone); }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--blood); }
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   ATMOSPHERE — grain, hatching, the veil
+   ============================================================ */
+
+/* Paper grain, always on */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9998;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-a { color: inherit; text-decoration: none; }
-p { line-height: 1.75; }
-img { display: block; max-width: 100%; }
-
-::selection {
-  background: var(--accent);
-  color: var(--text);
+/* The veil — the sky bleeding, only present in the Eclipse */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--veil-opacity);
+  transition: opacity 900ms var(--ease);
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -8%, rgba(207, 34, 24, 0.34), transparent 68%),
+    radial-gradient(ellipse 70% 50% at 50% 108%, rgba(120, 12, 16, 0.3), transparent 70%),
+    radial-gradient(ellipse at 50% 50%, transparent 32%, rgba(0, 0, 0, 0.78) 100%);
 }
 
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 0; }
+/* Cross-hatch — engraver's texture for panels */
+.hatch {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--hatch-opacity);
+  background-image:
+    repeating-linear-gradient(45deg, currentColor 0 1px, transparent 1px 6px);
+  transition: opacity 700ms var(--ease);
+}
 
-.container {
-  width: min(var(--max-width), calc(100% - 48px));
+/* Halftone screentone — manga panel caps */
+.tone {
+  background-color: var(--pitch);
+  background-image: radial-gradient(circle, rgba(236, 228, 212, 0.13) 1px, transparent 1px);
+  background-size: 5px 5px;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+.wrap {
+  width: 100%;
+  max-width: var(--measure);
   margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Full-bleed band that still aligns its inner content */
+.bleed { width: 100%; position: relative; }
+
+main { flex: 1; position: relative; z-index: 2; }
+
+/* The spine — a fixed left margin rail, like a book's binding edge */
+@media (min-width: 1080px) {
+  body { padding-left: var(--rail-w); }
+}
+
+/* ============================================================
+   TYPOGRAPHY UTILITIES
+   ============================================================ */
+
+.display {
+  font-family: var(--display);
+  font-weight: 900;
+  font-optical-sizing: auto;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+
+.serif-lede {
+  font-family: var(--body);
+  font-size: var(--t-md);
+  line-height: 1.8;
+  color: var(--ash);
+}
+
+/* Technical label — mono, tracked wide, uppercase */
+.label {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.label-brass { color: var(--brass); }
+.label-blood { color: var(--blood-hi); }
+.label-ash   { color: var(--ash-dim); }
+
+/* Numerals for chapters / indices */
+.numeral {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--brass);
+  font-variant-numeric: tabular-nums;
+}
+
+.rule {
+  height: 1px;
+  background: var(--line);
+  border: none;
+  flex: 1;
+}
+
+/* ============================================================
+   REVEALS — two shapes, one mechanism.
+   Elements animate when scrolled into view; the hero uses the
+   same mechanism on load, which gives the entry sequence.
+
+   The observed element must always keep a visible box, or the
+   observer never fires. So "wipe" is declared on the mask, and
+   the line inside it is what actually moves.
+   ============================================================ */
+
+[data-reveal] {
+  opacity: 0;
+  transition:
+    opacity 780ms var(--ease) var(--d, 0ms),
+    transform 900ms var(--ease) var(--d, 0ms);
+  will-change: opacity, transform;
+}
+
+[data-reveal="rise"] { transform: translateY(20px); }
+
+[data-reveal].in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Wipe: the mask stays put, the line rises out of it */
+[data-reveal="wipe"] {
+  opacity: 1;
+  overflow: hidden;
+  transform: none;
+}
+
+[data-reveal="wipe"] > * {
+  display: block;
+  transform: translateY(102%);
+  transition: transform 950ms var(--ease) var(--d, 0ms);
+  will-change: transform;
+}
+
+[data-reveal="wipe"].in > * { transform: none; }
+
+/* ============================================================
+   SHARED COMPONENTS
+   ============================================================ */
+
+/* Section chapter head: numeral · title · rule · link */
+.chapter {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(14px, 2.5vw, 26px);
+  padding-bottom: 18px;
+}
+
+.chapter-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: var(--t-lg);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.chapter-link {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ash-dim);
+  white-space: nowrap;
+  transition: color 200ms;
+}
+
+.chapter-link:hover { color: var(--brass); }
+
+/* Blade link — underline draws from the left on hover */
+.blade {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+.blade::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 380ms var(--ease);
+}
+
+.blade:hover::after,
+.blade:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* ============================================================
+   MOTION PREFERENCES
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  [data-reveal] { opacity: 1; transform: none; clip-path: none; }
 }

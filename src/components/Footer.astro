@@ -5,28 +5,31 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <div class="container epigraph">
-    <Brand size={28} />
-    <p class="epigraph-text">
+  <div class="colophon wrap">
+    <div class="colophon-mark">
+      <Brand size={26} />
+    </div>
+    <blockquote class="colophon-text">
       In this world, is the destiny of mankind controlled by some transcendental
       entity or law? At least it is true that man has no control, even over his own will.
-    </p>
-    <span class="epigraph-source">Berserk — Volume 1</span>
+    </blockquote>
+    <cite class="label label-blood">Berserk — Volume 1</cite>
   </div>
 
-  <div class="footer-rule"></div>
+  <div class="footer-bar">
+    <div class="wrap footer-inner">
+      <span class="foot-copy">{profile.name} · MMXXVI · Struggler</span>
 
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <Brand size={16} />
-      <span class="copy">{profile.name} · {year} · Struggler</span>
-    </div>
-    <div class="links">
-      <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
-      {profile.linkedin && (
-        <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
-      )}
-      <a href={`mailto:${profile.email}`}>Email</a>
+      <ul class="foot-links">
+        <li><a href={profile.github} target="_blank" rel="noreferrer" class="blade">GitHub</a></li>
+        {profile.linkedin && (
+          <li><a href={profile.linkedin} target="_blank" rel="noreferrer" class="blade">LinkedIn</a></li>
+        )}
+        <li><a href={`mailto:${profile.email}`} class="blade">Email</a></li>
+        <li><a href={profile.resume} download="Hitendra-Kawale-Resume.pdf" class="blade">Resume</a></li>
+      </ul>
+
+      <span class="foot-year">{year}</span>
     </div>
   </div>
 </footer>
@@ -34,81 +37,71 @@ const year = new Date().getFullYear();
 <style>
   .footer {
     margin-top: auto;
-    border-top: 3px solid var(--ink);
+    border-top: 1px solid var(--line);
+    position: relative;
+    z-index: 2;
   }
 
-  .epigraph {
+  .colophon {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
-    padding: 44px 0 36px;
+    gap: 20px;
+    padding: clamp(56px, 9vw, 96px) var(--gutter);
     text-align: center;
   }
 
-  .epigraph-text {
+  .colophon-mark { opacity: 0.7; }
+
+  .colophon-text {
     font-family: var(--body);
     font-style: italic;
-    font-size: 0.98rem;
-    color: var(--muted);
-    max-width: 560px;
-    line-height: 1.8;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    line-height: 1.75;
+    color: var(--ash);
+    max-width: 620px;
   }
 
-  .epigraph-source {
-    font-family: var(--heading);
-    font-size: 0.66rem;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent-hi);
-  }
-
-  .footer-rule {
-    height: 1px;
-    background: var(--border);
+  .footer-bar {
+    border-top: 1px solid var(--line);
   }
 
   .footer-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 20px 0;
+    gap: 20px;
+    padding-block: 20px;
     flex-wrap: wrap;
   }
 
-  .footer-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .foot-copy, .foot-year {
+    font-family: var(--mono);
+    font-size: var(--t-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
   }
 
-  .copy {
-    font-family: var(--heading);
-    font-size: 0.62rem;
-    font-weight: 400;
+  .foot-links {
+    display: flex;
+    gap: clamp(14px, 3vw, 28px);
+    flex-wrap: wrap;
+  }
+
+  .foot-links a {
+    font-family: var(--mono);
+    font-size: var(--t-micro);
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--ash);
+    transition: color 200ms;
   }
 
-  .links {
-    display: flex;
-    gap: 20px;
-  }
+  .foot-links a:hover { color: var(--brass); }
 
-  .links a {
-    font-family: var(--heading);
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--muted);
-    transition: color 150ms;
-  }
-
-  .links a:hover {
-    color: var(--accent);
+  @media (max-width: 640px) {
+    .foot-year { display: none; }
+    .footer-inner { justify-content: flex-start; gap: 14px; }
   }
 </style>

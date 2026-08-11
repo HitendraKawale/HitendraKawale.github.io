@@ -1,43 +1,74 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import Brand from "../components/Brand.astro";
 import { projects } from "../data/projects";
 import { profile } from "../data/profile";
 
-const groups: { label: string; status: typeof projects[0]["status"] }[] = [
-  { label: "Built",       status: "Built" },
-  { label: "In Progress", status: "In Progress" },
-  { label: "Research",    status: "Research" },
+const groups = [
+  { label: "Built",       note: "Shipped, tested, running",          status: "Built" as const },
+  { label: "In Progress", note: "On the anvil",                      status: "In Progress" as const },
+  { label: "Research",    note: "Studied, measured, written up",     status: "Research" as const },
 ];
+
+let plate = 0;
 ---
 
 <BaseLayout
-  title={`Projects — ${profile.name}`}
-  description="Projects by Hitendra Kawale — AI systems, RAG pipelines, LLM evaluation, and computer vision."
+  title={`The Armoury — ${profile.name}`}
+  description="Projects by Hitendra Kawale — LLM platforms, RAG pipelines, multi-agent systems, and 3D vision research."
 >
-  <section class="page-header">
-    <span class="eyebrow">Projects — Forged, Not Found</span>
-    <h1>The Armoury</h1>
-    <p>Every weapon here was designed, built, and shipped by hand — or is still on the anvil.</p>
-  </section>
+  <header class="masthead">
+    <div class="wrap">
+      <div class="chapter-cap" data-reveal="rise">
+        <Brand size={13} />
+        <span class="label label-blood">Chapter II</span>
+        <span class="rule"></span>
+        <span class="label label-ash">{projects.length} entries</span>
+      </div>
+
+      <h1 class="mast-title">
+        <span class="mast-line" data-reveal="wipe"><span class="mast-in">The</span></span>
+        <span class="mast-line" data-reveal="wipe" style="--d:120ms"><span class="mast-in">Armoury</span></span>
+      </h1>
+
+      <p class="mast-lede" data-reveal="rise" style="--d:260ms">
+        Every weapon here was designed, built, and shipped by hand — or is still
+        on the anvil. Metrics are measured, not estimated.
+      </p>
+    </div>
+  </header>
 
   {projects.length === 0 ? (
-    <div class="empty-panel">
-      <div class="empty-cap"></div>
-      <div class="empty-body">
-        <span class="empty-title">The Dragonslayer Is Being Forged</span>
-        <span class="empty-sub">It'll be too big to be called a project. Massive, thick, heavy, and far too rough.</span>
+    <div class="wrap">
+      <div class="empty">
+        <div class="empty-cap tone"></div>
+        <div class="empty-body">
+          <span class="hatch" aria-hidden="true"></span>
+          <p class="empty-title">The Dragonslayer is being forged</p>
+          <p class="empty-note">
+            Too big to be called a project. Massive, thick, heavy, and far too rough.
+          </p>
+        </div>
       </div>
-      <div class="empty-cap"></div>
     </div>
-  ) : groups.map(({ label, status }) => {
+  ) : groups.map(({ label, note, status }) => {
     const list = projects.filter(p => p.status === status);
     if (!list.length) return null;
+
     return (
       <section class="group">
-        <span class="group-label">{label}</span>
-        <div class="grid">
-          {list.map(p => <ProjectCard project={p} />)}
+        <div class="wrap">
+          <header class="chapter" data-reveal="rise">
+            <span class="numeral">{String(list.length).padStart(2, "0")}</span>
+            <h2 class="chapter-title">{label}</h2>
+            <span class="rule"></span>
+            <span class="chapter-link">{note}</span>
+          </header>
+
+          <div class="grid">
+            {list.map(p => <ProjectCard project={p} index={++plate} wide={p.featured} />)}
+          </div>
         </div>
       </section>
     );
@@ -45,102 +76,92 @@ const groups: { label: string; status: typeof projects[0]["status"] }[] = [
 </BaseLayout>
 
 <style>
-  .page-header {
-    padding: 72px 0 52px;
-    border-bottom: 3px solid var(--ink);
+  .masthead {
+    padding-block: clamp(48px, 8vw, 96px);
+    border-bottom: 1px solid var(--line);
   }
 
-  .eyebrow {
-    font-family: var(--heading);
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent-hi);
-    display: block;
-    margin-bottom: 16px;
+  .chapter-cap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: clamp(28px, 5vw, 52px);
   }
 
-  h1 {
-    font-family: var(--heading);
-    font-size: clamp(2.1rem, 5vw, 3.4rem);
+  .chapter-cap .label { white-space: nowrap; }
+
+  .mast-title {
+    font-family: var(--display);
     font-weight: 900;
-    letter-spacing: 0.06em;
-    line-height: 1;
-    margin-bottom: 16px;
+    font-size: var(--t-xxl);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
   }
 
-  .page-header p {
-    font-size: 1rem;
-    color: var(--muted);
-    max-width: 480px;
-    line-height: 1.75;
+  .mast-line { display: block; overflow: hidden; padding-block: 0.05em; }
+
+  .mast-in {
+    display: block;
+    background: linear-gradient(100deg, var(--bone) 52%, #d78a68 78%, var(--blood-hi) 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .mast-lede {
+    font-size: var(--t-md);
+    line-height: 1.8;
+    color: var(--ash);
+    max-width: 48ch;
+    margin-top: clamp(22px, 3vw, 34px);
   }
 
   .group {
-    padding: 48px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .group-label {
-    font-family: var(--heading);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: block;
-    margin-bottom: 24px;
+    padding-block: clamp(44px, 7vw, 82px);
+    border-bottom: 1px solid var(--line);
   }
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 24px);
+    align-items: stretch;
   }
 
-  /* ── Empty state ──────────────── */
-  .empty-panel {
-    margin: 52px 0 96px;
-    border: 3px solid var(--ink);
-    box-shadow: 4px 4px 0 0 var(--ink);
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
   }
 
-  .empty-cap {
-    height: 24px;
-    background-color: var(--ink);
-    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
-    background-size: 5px 5px;
+  /* ── Empty ────────────────────────── */
+  .empty {
+    margin-block: clamp(48px, 8vw, 90px);
+    border: 1px solid var(--line);
   }
+
+  .empty-cap { height: 26px; }
 
   .empty-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    padding: 72px 24px;
-    background: var(--surface);
+    position: relative;
+    padding: clamp(48px, 8vw, 88px) var(--gutter);
+    text-align: center;
+    background: var(--soot);
+    color: var(--ash-dim);
   }
+
+  .empty-title, .empty-note { position: relative; z-index: 1; }
 
   .empty-title {
-    font-family: var(--heading);
-    font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+    font-family: var(--display);
     font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text);
+    font-size: var(--t-lg);
+    color: var(--bone);
   }
 
-  .empty-sub {
-    font-family: var(--body);
-    font-size: 1rem;
-    color: var(--muted);
+  .empty-note {
     font-style: italic;
-  }
-
-  @media (max-width: 560px) {
-    .grid { grid-template-columns: 1fr; }
-    .group { padding: 36px 0; }
+    color: var(--ash);
+    margin-top: 12px;
   }
 </style>

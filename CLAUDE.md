@@ -27,35 +27,56 @@ Multi-page Astro 6 portfolio. Four routes:
 | `/blog` | `src/pages/blog/index.astro` |
 | `/blog/[slug]` | `src/pages/blog/[slug].astro` |
 
+There is also a `404.astro`.
+
 **Layouts:**
-- `BaseLayout.astro` — shell (`<head>`, `Nav`, `<main>`, `Footer`). Requires `title` and `description` props.
-- `PostLayout.astro` — wraps `BaseLayout` for blog posts. Takes a `frontmatter` prop with the post's typed data. Never referenced from markdown frontmatter — `[slug].astro` calls `render(post)` and passes `post.data` as `frontmatter`.
+- `BaseLayout.astro` — shell (`<head>`, `AshCanvas`, `Rail`, `Nav`, `<main>`, `Footer`, the Eclipse overlay) plus **all site JavaScript** in one `<script>`. Requires `title` and `description` props.
+- `PostLayout.astro` — wraps `BaseLayout` for blog posts. Takes `frontmatter`, plus `minutes` (reading time) and `prev`/`next` adjacent-post props supplied by `[slug].astro`. Never referenced from markdown frontmatter.
 
-**Components:** `Nav`, `Footer`, `ProjectCard`, `BlogCard`, `Brand`. All are self-contained Astro components with scoped `<style>` blocks.
+**Components:** `Nav`, `Footer`, `Rail`, `Behelit`, `AshCanvas`, `Marquee`, `ProjectIndex`, `ProjectCard`, `BlogCard`, `Brand`. All self-contained with scoped `<style>` blocks.
 
-**Berserk identity layer** (deliberate, do not "professionalize" away): `Brand.astro` is a stylized Brand of Sacrifice SVG sigil (colored via `currentColor`, accepts a `size` prop) used in the nav, footer, hero chapter cap, post end-marks, and `public/favicon.svg`. Nav labels are Armoury (/projects), Chronicles (/blog), Send Word (/contact); the nav brand reads "Struggler". The home hero has a pulsing red eclipse (`.eclipse`) behind the name, a "Chapter I · The Struggler" cap, and a Skull Knight epigraph; the footer carries the Berserk Volume 1 causality narration. Page h1s: "The Armoury", "The Chronicles", "Send Word". Empty states reference the Dragonslayer.
+## The Chronicle — design direction
 
-**Design tokens** live in `src/styles/global.css` as CSS custom properties. Imported once in `BaseLayout`. The site uses a Berserk-inspired dark editorial theme.
+The site is a **bound volume**: engraved, printed, ink-on-paper — not a glowing dark UI. Berserk identity is explicit and deliberate; do not "professionalize" it away.
+
+- `Brand.astro` — Brand of Sacrifice sigil (`currentColor`, `size` prop) in nav, rail, footer, chapter caps, post end-marks, favicon.
+- **Naming:** Armoury (/projects), Chronicles (/blog), Send Word (/contact). Sections are numbered chapters. Project cards are "plates". Empty states reference the Dragonslayer.
+- **The spine (`Rail.astro`)** — fixed left binding edge shown at ≥1080px (`body { padding-left: var(--rail-w) }`), carrying the sigil, a vertical running head, and a scroll-progress line.
+- **The Behelit (`Behelit.astro`)** — nav toggle that fires the Eclipse: a black sun swallows the screen (`#sun` in `BaseLayout`), then `data-eclipse` is set on `<html>`, swapping the whole palette. Persisted in `localStorage` and restored pre-paint by an inline head script.
+- **The Tongues interlude** (home) — a bone-parchment page pasted into the black volume, cycling greetings through all eight of his languages. Full colour inversion is the point; keep it.
+- **Signature type treatment** — the hero/masthead display lines use a `background-clip: text` gradient so the type reads as *lit by the eclipse* (bone on the left, blood on the right).
+
+### Design tokens
+
+In `src/styles/global.css`, imported once by `BaseLayout`. `:root[data-eclipse]` redefines the same names for the Eclipse state, so **use the tokens** — anything hardcoded won't transform.
 
 | Token | Value | Usage |
 |---|---|---|
-| `--bg` | `#0d0b08` | Page background (warm near-black) |
-| `--surface` | `#141210` | Card/panel background |
-| `--surface-2` | `#1e1b17` | Elevated surface |
-| `--text` | `#e8e0d0` | Primary text (aged paper cream) |
-| `--muted` | `#6b6258` | Secondary/muted text |
-| `--border` | `#2e2820` | Dividers and borders |
-| `--accent` | `#8b1a1a` | Blood red — section labels, hover |
-| `--accent-hi` | `#c0392b` | Brighter red — active hover states |
-| `--ink` | `#000000` | Panel borders (nav, cards, hero) |
-| `--green` | `#22c55e` | Availability status dot |
-| `--heading` | Cinzel serif | Headings, nav, labels |
-| `--body` | Crimson Text serif | Body copy |
-| `--mono` | system monospace | Code and technical labels |
-| `--max-width` | `1000px` | Content container width |
-| `--nav-h` | `64px` | Nav bar height |
+| `--void` | `#0a0806` | Page ground (warm near-black) |
+| `--pitch` | `#000000` | Gutters, panel caps |
+| `--soot` / `--soot-2` | `#12100c` / `#1a1611` | Panel fill / elevated fill |
+| `--bone` | `#ece4d4` | Primary text |
+| `--ash` / `--ash-dim` | `#8a8175` / `#5d574e` | Secondary / tertiary text |
+| `--line` | `#2a2419` | Hairlines (the only border weight) |
+| `--blood` / `--blood-hi` | `#93171b` / `#cf3520` | Accent, hover, blood floods |
+| `--brass` / `--brass-dim` | `#c8a24a` / `#7d6528` | Gold leaf — numerals, plate marks |
+| `--paper` / `--paper-ink` | `#e4dac2` / `#14110c` | The parchment insert |
+| `--display` | Bodoni Moda | Headings, engraved plate type |
+| `--body` | Spectral | Body copy |
+| `--mono` | IBM Plex Mono | Labels, metadata, technical text |
+| `--han` | Noto Serif SC | 泽贤 name seal |
+| `--rail-w` / `--nav-h` | `68px` / `68px` | Spine width / nav height |
+| `--measure` | `1180px` | Content width (`.wrap`) |
 
-Google Fonts (`Cinzel` + `Crimson Text`) are loaded via `<link>` in `BaseLayout.astro`. A subtle paper grain texture is applied as a fixed `body::after` pseudo-element using an inline SVG `feTurbulence` filter.
+Fonts load from Google Fonts in `BaseLayout`; the Noto Serif SC request is glyph-subset via `&text=` so the CJK seal costs almost nothing.
+
+### Shared utilities
+
+`.wrap` (content column), `.bleed` (full width), `.label` + `.label-brass`/`-blood`/`-ash` (mono eyebrows, written as `[ Bracketed ]`), `.numeral`, `.chapter` head, `.rule`, `.blade` (underline-on-hover link), `.tone` (halftone screentone), `.hatch` (engraver's cross-hatch, inherits `currentColor`).
+
+### Reveals — read this before adding one
+
+`[data-reveal="rise"|"wipe"]` + `--d` for stagger; a single IntersectionObserver in `BaseLayout` adds `.in`. **The observed element must keep a non-zero visible box**, or the observer never fires. That is why `wipe` is declared on the overflow-hidden mask and animates its child — never put a reveal on something that starts clipped to nothing (`clip-path`, `scaleX(0)`, or translated outside a clipping parent).
 
 ## Home page content selection
 

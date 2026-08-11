@@ -1,157 +1,170 @@
 ---
+// A panel in the volume. Ink border, screentone cap, engraved plate number.
 import type { Project } from "../data/projects";
 
 interface Props {
   project: Project;
+  index: number;
+  wide?: boolean;
 }
 
-const { project } = Astro.props;
-
-const statusColor: Record<Project["status"], string> = {
-  "Built":       "var(--accent-hi)",
-  "In Progress": "#c8922a",
-  "Research":    "#8a7c5a",
-};
+const { project, index, wide = false } = Astro.props;
+const plate = String(index).padStart(2, "0");
 ---
 
-<article class="card">
-  <div class="card-cap"></div>
+<article
+  class:list={["panel", { wide }]}
+  data-reveal="rise"
+  style={`--d:${(index % 3) * 90}ms`}
+>
+  <div class="panel-cap tone">
+    <span class="plate">Plate {plate}</span>
+    <span class:list={["state", project.status.toLowerCase().replace(" ", "-")]}>{project.status}</span>
+  </div>
 
-  <div class="card-body">
-    <header class="card-top">
-      <span class="status" style={`color: ${statusColor[project.status]}`}>
-        {project.status}
-      </span>
-      <span class="subtitle">{project.subtitle}</span>
+  <div class="panel-body">
+    <span class="hatch" aria-hidden="true"></span>
+
+    <header class="panel-head">
+      <h3>{project.title}</h3>
+      <p class="sub">{project.subtitle}</p>
     </header>
 
-    <h3>{project.title}</h3>
     <p class="desc">{project.description}</p>
 
-    <div class="stack">
-      {project.stack.map(t => <span class="pill">{t}</span>)}
-    </div>
+    <ul class="stack">
+      {project.stack.map(t => <li>{t}</li>)}
+    </ul>
 
-    {project.href && (
-      <a class="clink" href={project.href} target="_blank" rel="noreferrer">
-        View project <span class="clink-arrow">↗</span>
+    {project.href ? (
+      <a class="go" href={project.href} target="_blank" rel="noreferrer">
+        <span class="blade">Open the work</span>
+        <span class="go-arrow" aria-hidden="true">↗</span>
       </a>
+    ) : (
+      <span class="go go-sealed">Sealed — dissertation work</span>
     )}
   </div>
 </article>
 
 <style>
-  .card {
+  .panel {
     display: flex;
     flex-direction: column;
-    background: var(--surface);
-    border: 3px solid var(--ink);
-    box-shadow: 4px 4px 0 0 var(--ink);
-    transition: box-shadow 200ms, transform 200ms;
+    background: var(--soot);
+    border: 1px solid var(--line);
+    position: relative;
+    transition: border-color 340ms var(--ease), transform 340ms var(--ease), box-shadow 340ms var(--ease);
   }
 
-  .card:hover {
-    box-shadow: 6px 6px 0 0 var(--accent);
-    transform: translate(-1px, -1px);
+  .panel:hover {
+    border-color: var(--blood);
+    transform: translate(-2px, -3px);
+    box-shadow: 8px 10px 0 0 var(--pitch);
   }
 
-  /* Halftone dot cap — classic manga screen tone */
-  .card-cap {
-    height: 28px;
-    background-color: var(--ink);
-    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
-    background-size: 5px 5px;
-    flex-shrink: 0;
-  }
+  .panel.wide { grid-column: span 2; }
 
-  .card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 20px 22px 22px;
-    flex: 1;
-  }
-
-  .card-top {
+  .panel-cap {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--line);
   }
 
-  .status {
+  .plate, .state {
     font-family: var(--mono);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
+    font-size: var(--t-micro);
+    letter-spacing: 0.24em;
     text-transform: uppercase;
   }
 
-  .subtitle {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--muted);
-    text-align: right;
+  .plate { color: var(--brass-dim); }
+
+  .state { color: var(--ash-dim); }
+  .state.built       { color: var(--bone); }
+  .state.research    { color: var(--brass); }
+  .state.in-progress { color: var(--blood-hi); }
+
+  .panel-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: clamp(20px, 2.6vw, 30px);
+    flex: 1;
+    color: var(--ash-dim); /* drives the hatch */
   }
 
+  .panel-body > :not(.hatch) { position: relative; z-index: 1; }
+
   h3 {
-    font-family: var(--heading);
-    font-size: 1.1rem;
+    font-family: var(--display);
     font-weight: 700;
-    letter-spacing: 0.05em;
-    color: var(--text);
-    line-height: 1.25;
+    font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--bone);
+    transition: color 300ms;
+  }
+
+  .panel:hover h3 { color: var(--blood-hi); }
+
+  .sub {
+    font-family: var(--mono);
+    font-size: var(--t-xs);
+    letter-spacing: 0.04em;
+    color: var(--brass-dim);
+    margin-top: 8px;
+    line-height: 1.5;
   }
 
   .desc {
-    font-size: 0.95rem;
-    color: var(--muted);
-    line-height: 1.65;
+    font-size: var(--t-sm);
+    line-height: 1.75;
+    color: var(--ash);
     flex: 1;
   }
 
   .stack {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 5px;
   }
 
-  .pill {
+  .stack li {
     font-family: var(--mono);
-    font-size: 0.68rem;
-    padding: 3px 9px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    background: var(--surface-2);
+    font-size: var(--t-micro);
+    letter-spacing: 0.08em;
+    padding: 4px 9px;
+    border: 1px solid var(--line);
+    color: var(--ash);
+    background: var(--soot-2);
   }
 
-  .clink {
-    font-family: var(--heading);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    width: fit-content;
-    transition: color 150ms;
-    margin-top: 4px;
-    display: flex;
+  .go {
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
+    width: fit-content;
+    font-family: var(--mono);
+    font-size: var(--t-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bone);
+    transition: color 220ms;
   }
 
-  .clink:hover { color: var(--accent-hi); }
+  .go:hover { color: var(--blood-hi); }
 
-  .clink-arrow {
-    transition: transform 150ms;
-    display: inline-block;
-    font-style: normal;
-  }
+  .go-arrow { transition: transform 300ms var(--ease); }
+  .go:hover .go-arrow { transform: translate(3px, -3px); }
 
-  .clink:hover .clink-arrow { transform: translate(2px, -2px); }
+  .go-sealed { color: var(--ash-dim); cursor: default; }
 
-  @media (max-width: 560px) {
-    .card-top { flex-direction: column; align-items: flex-start; }
-    .subtitle { text-align: left; }
+  @media (max-width: 900px) {
+    .panel.wide { grid-column: span 1; }
   }
 </style>
