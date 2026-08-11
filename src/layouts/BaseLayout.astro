@@ -11,10 +11,14 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+
+// The homepage hides its scrollbar — it reads as one uninterrupted
+// opening. Inner pages keep theirs as a reading-position cue.
+const isHome = Astro.url.pathname === "/";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-home={isHome ? "" : undefined}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

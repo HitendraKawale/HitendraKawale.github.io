@@ -138,6 +138,11 @@ p { line-height: 1.75; }
 ::-webkit-scrollbar-track { background: var(--void); }
 ::-webkit-scrollbar-thumb { background: var(--blood); }
 
+/* The homepage runs without a scrollbar. Wheel, keyboard, touch and
+   the spine all still scroll it — only the bar itself is hidden. */
+:root[data-home] { scrollbar-width: none; }
+:root[data-home]::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
 :focus-visible {
   outline: 2px solid var(--brass);
   outline-offset: 3px;
